@@ -35,6 +35,9 @@ who sees menus, not code.
 - **New features are off by default**, each with its own switch (per language), and with
   sub-switches for the risky parts (for example "keep the gateway's min/max" or "gift on
   direct payment" - both off until the admin turns them on).
+- **Every path on its own.** When a bot has several paths (platforms in a downloader, features
+  in a shop), each path's captions and buttons are customized separately in 🎨; what is
+  really shared is labelled as shared. Details in the `telegram-bot-customization` skill.
 - **Three places for every feature:** the bot's admin menu, the web panel, and 🎨. A feature only
   in one of them is not finished.
 - **Admin texts are Persian only.** Customer texts exist in every supported language (Persian
@@ -55,6 +58,11 @@ who sees menus, not code.
   approval or a webhook retry never charges, credits or builds twice; failures refund to the
   wallet and say so; min/max limits and gifts follow the admin's settings; every money event is
   reported to the admin group in its topic.
+- **📊 Statistics like Ciro:** every bot has «📊 آمار ربات» as the first admin button and the
+  same numbers on the web dashboard (details in `telegram-bot-customization`,
+  `references/bot-stats.md`); every new paid feature adds its lines there.
+- **Status reports like Ciro:** a report group with topics, a nightly report, a cron status
+  screen and uptime alerts (`telegram-bot-customization`, `references/status-reports.md`).
 - **Updates like Ciro:** when a project needs an update feature, build it the way Ciro does it
   (button in the bot, snapshot first, config and database kept, automatic rollback, progress
   bar in the same message, back to the previous version from the bot, admins told what is

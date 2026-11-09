@@ -2,6 +2,12 @@
 require_once 'vendor/autoload.php';
 require 'config.php';
 require 'vendor/autoload.php';
+// Jalali dates (jdate) are used all through this file - in the purchase and
+// renewal reports among others. Every entry point that loads this file gets
+// them from here, not only the ones that remembered to load jdf.php: the
+// FrenzyEx callback did not, and a paid purchase crashed on the admin's report
+// with «Call to undefined function jdate()».
+require_once __DIR__ . '/jdf.php';
 ini_set('error_log', 'error_log');
 
 use Endroid\QrCode\Builder\Builder;
@@ -3601,7 +3607,8 @@ if (!function_exists('card_new_default')) {
 if (!function_exists('card_trust_on')) {
     // 🛡 کارت‌به‌کارت فقط برای مشتری‌های قدیمی, per language. On: card-to-card
     // is offered only to a customer with MORE than N paid purchases or
-    // renewals - N is «cardtrustmin», 3 unless the admin changed it.
+    // renewals - N is «cardtrustmin», 3 unless the admin changed it - or, when
+    // a day is set («cardtrustdate», 📅), one who joined the bot by that day.
     function card_trust_on($lang)
     {
         return pay_value('cardtrust', $lang, 'offtrust') === 'ontrust';
@@ -3648,6 +3655,90 @@ if (!function_exists('card_trust_on')) {
             addFieldToTable('user', 'card_trust_auto', null, 'VARCHAR(20) NULL');
         }
     }
+    // 📅 a second way to count as a returning customer, per language: joined
+    // the bot on or before this Gregorian day («cardtrustdate», Y-m-d; empty =
+    // no date rule). Either rule is enough - more than N purchases/renewals, or
+    // a member since then.
+    function card_trust_date_ok($d)
+    {
+        return is_string($d) && preg_match('/^\d{4}-\d{2}-\d{2}$/', $d) === 1
+            && checkdate((int) substr($d, 5, 2), (int) substr($d, 8, 2), (int) substr($d, 0, 4));
+    }
+    function card_trust_date($lang)
+    {
+        $d = trim((string) pay_value('cardtrustdate', $lang, ''));
+        return card_trust_date_ok($d) ? $d : '';
+    }
+    // what an admin typed, as Y-m-d, or null: 2026-11-02, 2026/11/2, 2026.11.02,
+    // Persian or Arabic digits. A Jalali day (1405/08/12) is turned into its
+    // Gregorian one - no join date of a Telegram bot falls in the years 1300-1500.
+    function card_trust_date_parse($s)
+    {
+        $s = strtr(trim((string) $s), [
+            '۰' => '0', '۱' => '1', '۲' => '2', '۳' => '3', '۴' => '4', '۵' => '5', '۶' => '6', '۷' => '7', '۸' => '8', '۹' => '9',
+            '٠' => '0', '١' => '1', '٢' => '2', '٣' => '3', '٤' => '4', '٥' => '5', '٦' => '6', '٧' => '7', '٨' => '8', '٩' => '9',
+        ]);
+        if (!preg_match('~^(\d{4})\s*[-/.]\s*(\d{1,2})\s*[-/.]\s*(\d{1,2})$~', $s, $m)) {
+            return null;
+        }
+        [$y, $mo, $d] = [(int) $m[1], (int) $m[2], (int) $m[3]];
+        if ($y >= 1300 && $y <= 1500) {
+            if (!function_exists('jalali_to_gregorian') || !jcheckdate($mo, $d, $y)) {
+                return null;
+            }
+            [$y, $mo, $d] = array_map('intval', jalali_to_gregorian($y, $mo, $d));
+        }
+        if ($y < 2000 || $y > 2100 || !checkdate($mo, $d, $y)) {
+            return null;
+        }
+        return sprintf('%04d-%02d-%02d', $y, $mo, $d);
+    }
+    // the last second of that day, in this language's zone (lang_timezone):
+    // "2 November" takes in everyone who joined on the 2nd too
+    function card_trust_date_until($lang)
+    {
+        $d = card_trust_date($lang);
+        if ($d === '') {
+            return null;
+        }
+        $dt = DateTime::createFromFormat('!Y-m-d H:i:s', $d . ' 23:59:59', new DateTimeZone(lang_timezone($lang)));
+        return $dt ? $dt->getTimestamp() : null;
+    }
+    // user.register is the unix time of the first /start ('none' until the
+    // first message after an old install filled it in - not a member date)
+    function card_trust_joined_by_date($userRow, $lang)
+    {
+        $until = card_trust_date_until($lang);
+        $reg = trim((string) ($userRow['register'] ?? ''));
+        return $until !== null && ctype_digit($reg) && (int) $reg > 0 && (int) $reg <= $until;
+    }
+    // how many users of this language joined on or before the day
+    function card_trust_date_count($lang)
+    {
+        global $pdo;
+        $until = card_trust_date_until($lang);
+        if ($until === null) {
+            return 0;
+        }
+        [$w, $p] = user_lang_where($lang);
+        $st = $pdo->prepare("SELECT COUNT(*) FROM user WHERE {$w} AND register REGEXP '^[0-9]+$' AND CAST(register AS UNSIGNED) > 0 AND CAST(register AS UNSIGNED) <= ?");
+        $st->execute(array_merge($p, [$until]));
+        return (int) $st->fetchColumn();
+    }
+    // the day as an admin reads it: 2026-11-02, and in Persian also its Jalali
+    // day (۱۱ آبان ۱۴۰۵)
+    function card_trust_date_label($lang)
+    {
+        $d = card_trust_date($lang);
+        if ($d === '') {
+            return '';
+        }
+        // noon of the same calendar day on Tehran time, so the Jalali day is
+        // that day whatever the language's own zone is
+        $noon = DateTime::createFromFormat('!Y-m-d H:i:s', $d . ' 12:00:00', new DateTimeZone('Asia/Tehran'));
+        $jal = ($noon && function_exists('jdate')) ? jdate('j F Y', $noon->getTimestamp(), '', 'Asia/Tehran') : '';
+        return $d . ($jal !== '' ? " ({$jal})" : '');
+    }
     // Does this customer get the card-to-card button right now? Their own
     // switch (user.cardpayment - 👥 کارت‌به‌کارت کاربرها, the user's page) as
     // before; with 🛡 on, also more than N paid purchases/renewals. The first
@@ -3663,7 +3754,8 @@ if (!function_exists('card_trust_on')) {
         if (!card_trust_on($lang)) {
             return $on;
         }
-        if (card_trust_count($userRow['id']) <= card_trust_min($lang)) {
+        // 📅 a member since the day set is trusted too - the cheap check first
+        if (!card_trust_joined_by_date($userRow, $lang) && card_trust_count($userRow['id']) <= card_trust_min($lang)) {
             return false;
         }
         if (trim((string) ($userRow['card_trust_auto'] ?? '')) === '') {
@@ -3771,7 +3863,7 @@ if (!function_exists('card_legacy_has_any_override')) {
             }
         }
         return gw_pay_override_has('timeauto_not_verify', $lang) || gw_pay_override_has('helpcart', $lang) || gw_pay_override_has('showcard', $lang)
-            || gw_pay_override_has('cardtrustmin', $lang);
+            || gw_pay_override_has('cardtrustmin', $lang) || gw_pay_override_has('cardtrustdate', $lang);
     }
 }
 if (!function_exists('gw_lang_has_any_override')) {

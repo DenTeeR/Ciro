@@ -1274,4 +1274,50 @@ return [
             . "Tronado takes nothing under 150,000 toman, so the bot no longer offers Tronado for smaller amounts (renewals, direct payments, what a purchase lacks) and quotes 150,000 as the minimum of a typed top-up.\n"
             . "📍 If Tronado changes it: 💎 Financial → 💱 Rial-to-crypto gateways → Tronado «Settings» → «⬇️ کمترین مبلغی که ترونادو قبول می‌کنه».</blockquote>",
     ],
+    [
+        'n' => 84,
+        'date' => '2026-11-08',
+        'fa' => "<blockquote>🛠 <b>رفع خطای FrenzyEx: «Call to undefined function jdate()»</b>\n"
+            . "<b>مشکل چی بود؟</b> وقتی مشتری با درگاه FrenzyEx سرویس می‌خرید یا تمدید می‌کرد، پرداخت تایید می‌شد ولی ربات وسط کار با این خطا متوقف می‌شد و پیام «❌ FrenzyEx: پرداخت تایید شد ولی شارژ با خطا روبه‌رو شد» توی گروه گزارش می‌اومد. علتش این بود که فایل تاریخ شمسی برای این درگاه بارگذاری نمی‌شد و ربات موقع نوشتن تاریخ گزارش خرید از کار می‌افتاد.\n"
+            . "<b>نتیجه‌ش چی بود؟</b> سرویس ساخته می‌شد ولی گزارش خرید برای ادمین نمی‌اومد، هدیهٔ شارژ و کش‌بک داده نمی‌شد، و در تمدید، سرویس توی ربات ممکن بود هنوز «منقضی» نشون داده بشه.\n"
+            . "<b>الان:</b> تاریخ شمسی همه‌جا خودکار بارگذاری می‌شه؛ برای FrenzyEx و هر درگاه، کرون یا بخش دیگه‌ای که همین مشکل رو می‌تونست داشته باشه. خرید و تمدید با FrenzyEx تا آخر انجام می‌شه.\n"
+            . "ℹ️ نیازی به تنظیم نیست. برای سفارش‌هایی که قبلاً این خطا رو دادن، سرویس و کیف پول اون مشتری رو یک بار چک کن.</blockquote>",
+        'en' => "<blockquote>🛠 <b>FrenzyEx error fixed: «Call to undefined function jdate()»</b>\n"
+            . "<b>What was wrong?</b> When a customer bought or renewed a service through FrenzyEx, the payment was confirmed but the bot stopped half way with this error, and «❌ FrenzyEx: payment confirmed but crediting failed» arrived in the report group. The Persian-calendar file was not loaded for this gateway, so the bot failed while writing the date into the purchase report.\n"
+            . "<b>What it caused:</b> the service was made, but the admin got no purchase report, the top-up gift and cashback were not given, and after a renewal the service could still show as expired in the bot.\n"
+            . "<b>Now:</b> the Persian calendar is loaded everywhere by itself - for FrenzyEx and for any gateway, cron or other part that could have hit the same problem. Purchases and renewals through FrenzyEx finish completely.\n"
+            . "ℹ️ Nothing to set up. For orders that already hit this error, check that customer's service and wallet once.</blockquote>",
+    ],
+    [
+        'n' => 85,
+        'date' => '2026-11-08',
+        'fa' => "<blockquote>📨 <b>پیام «✅ ربات آپدیت شد» دوباره میاد</b>\n"
+            . "بعد از آپدیت قبلی، فقط پیام نوار پیشرفت (۱۰۰٪) می‌اومد و پیام جدای «✅ ربات آپدیت شد» با لیست «تازه‌ها» نمی‌اومد. علتش این بود که اسکریپت سرور فایل تاریخ شمسی رو دوباره بارگذاری می‌کرد و همین باعث خطا می‌شد. حالا اون فایل هر چند بار هم بارگذاری بشه مشکلی پیش نمیاد.\n"
+            . "ℹ️ نیازی به کاری نیست. همین آپدیت، یادداشت همهٔ آپدیت‌هایی رو که ندیده بودی یک‌جا برات می‌فرسته.</blockquote>",
+        'en' => "<blockquote>📨 <b>The «✅ Bot updated» message is back</b>\n"
+            . "After the previous update only the progress bar (100%) appeared, without the separate «✅ Bot updated» message and its «what's new» list. The server script loaded the Persian-calendar file a second time and that stopped it. The file can now be loaded any number of times.\n"
+            . "ℹ️ Nothing to do. This update sends you the notes of every update you missed, all at once.</blockquote>",
+    ],
+    [
+        'n' => 86,
+        'date' => '2026-11-08',
+        'fa' => "<blockquote>📅 <b>کارت‌به‌کارت برای عضوهای قدیمی، بر اساس تاریخ عضویت</b>\n"
+            . "کنار شرط «🛡 فقط برای مشتری‌های قدیمی» حالا می‌تونی یه تاریخ میلادی هم بذاری. هر کاربری که تا آخر اون روز عضو ربات شده، کارت‌به‌کارت رو می‌بینه؛ حتی اگه هنوز به تعداد خرید/تمدید لازم نرسیده. کاربرهای بعد از اون روز مثل قبل باید به تعداد خرید/تمدید برسن.\n"
+            . "مثال: تاریخ رو <code>2026-11-02</code> بذاری؛ هر کی تا آخر ۲ نوامبر (۱۱ آبان) عضو شده کارت‌به‌کارت داره، و کاربر جدید بعد از ۳ خرید یا تمدید پرداخت‌شده.\n"
+            . "دفعه‌ی اولی که این کاربرها دکمه‌های پرداخت رو ببینن، کارت‌به‌کارت خودکار براشون روشن می‌شه. اگه بعدش برای یه نفر خاموشش کنی، خاموش می‌مونه.\n"
+            . "🔴 پیش‌فرض: <b>بدون تاریخ</b>. فقط وقتی کار می‌کنه که «🛡 فقط برای مشتری‌های قدیمی» روشن باشه.\n"
+            . "📍 1️⃣ 🏬 تنظیمات فروشگاه ← 💎 مالی ← «⚙️ تنظیمات» ردیف کارت به کارت\n"
+            . "2️⃣ 🔧 تنظیمات فنی درگاه (این زبان) ← «🛡 فقط برای مشتری‌های قدیمی» باید ✅ باشه\n"
+            . "3️⃣ «📅 عضوهای قبل از تاریخ» رو بزن و تاریخ رو بفرست؛ برای برداشتنش «🗑 حذف تاریخ»\n"
+            . "🌐 پنل وب: «درگاه‌ها» ← کارت «کارت به کارت» ← «📅 عضوهای قبل از این تاریخ».</blockquote>",
+        'en' => "<blockquote>📅 <b>Card to card for long-time members, by join date</b>\n"
+            . "Next to «🛡 Only for returning customers» you can now set a Gregorian date. Anyone who joined the bot by the end of that day sees card to card, even before reaching the purchases/renewals needed. Users who joined later still need that number, as before.\n"
+            . "Example: set <code>2026-11-02</code>; everyone who joined by the end of 2 November has card to card, and a new user gets it after 3 paid purchases or renewals.\n"
+            . "The first time one of these users sees the payment buttons, card to card is switched on for them. If you then turn it off for someone, it stays off.\n"
+            . "🔴 Default: <b>no date</b>. It only works while «🛡 Only for returning customers» is on.\n"
+            . "📍 1️⃣ 🏬 Store settings → 💎 Financial → «⚙️ Settings» on the card-to-card row\n"
+            . "2️⃣ 🔧 Gateway technical settings (this language) → «🛡 فقط برای مشتری‌های قدیمی» must be ✅\n"
+            . "3️⃣ Tap «📅 عضوهای قبل از تاریخ» and send the date; to remove it, «🗑 حذف تاریخ»\n"
+            . "🌐 Web panel: «Gateways» → the card-to-card card → «📅 Members who joined by this day».</blockquote>",
+    ],
 ];

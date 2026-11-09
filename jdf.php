@@ -8,6 +8,12 @@
  * @Version: 2.76 =>[ 1399/11/28 = 1442/07/04 = 2021/02/16 ]
  */
 
+// Loaded from many places (function.php itself, entry points, the installer's
+// own little scripts with a plain require). Declared once, whatever loads it
+// a second time: a second load used to stop the script with «Cannot redeclare
+// jdate()» - after an update that cut off the admins' «ربات آپدیت شد» notice.
+if (!function_exists('jdate')) {
+
 /*	F	*/
 function jdate($format, $timestamp = '', $none = '', $time_zone = 'Asia/Tehran', $tr_num = 'fa') {
 
@@ -645,3 +651,5 @@ function jalali_to_gregorian($jy, $jm, $jd, $mod = '') {
   for ($gm = 0; $gm < 13 and $gd > $sal_a[$gm]; $gm++) $gd -= $sal_a[$gm];
   return ($mod == '') ? array($gy, $gm, $gd) : $gy . $mod . $gm . $mod . $gd;
 }
+
+} // !function_exists('jdate')

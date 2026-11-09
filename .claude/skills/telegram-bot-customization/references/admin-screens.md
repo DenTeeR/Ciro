@@ -30,6 +30,39 @@ Explains in a short quote what belongs here and any rule ("product has two capti
 without categories; only one is active"), then sections and items. Buttons that edit how the
 *buttons* of a flow look ("🎨 ظاهر دکمه‌های …") sit under their own header, apart from texts.
 
+## Path picker (when the bot has paths)
+
+One button per path from the path registry, green when anything in it is customized, then the
+shared items:
+
+```
+🧭 <b>شخصی‌سازی مسیرها</b>
+هر مسیر کپشن و دکمه‌های خودش رو داره؛ یکی رو انتخاب کن.
+[✅🇮🇷 فارسی] [🇬🇧 English]
+[📸 اینستاگرام] [🎵 تیک‌تاک]       ← green = customized
+[🐦 توییتر]     [▶️ یوتیوب]
+[🔗 تنظیمات مشترک همهٔ مسیرها]
+[🔙 بازگشت] [❌ بستن]
+```
+
+## Path group
+
+The group screen for one path: its texts (ask for link, waiting, result caption, error), its
+button groups, its sticker. Each item shows where a change applies:
+
+```
+🎵 <b>تیک‌تاک</b> — 🇮🇷 فارسی
+[📝 کپشن نتیجه]   ← 📍 فقط برای تیک‌تاک
+[⏳ پیام «در حال دانلود…»]
+[❌ پیام خطا]
+[🔘 دکمه‌های زیر نتیجه]
+[📋 کپی از مسیر دیگه] [🔗 اعمال روی همهٔ مسیرها]
+[🔙 مسیرها]
+```
+
+On the item screen of a shared item the status block carries one more line:
+`🔗 مشترک بین ۳ مسیر: اینستاگرام، تیک‌تاک، توییتر`.
+
 ## Item screen
 
 See SKILL.md. Lines that show state: `✏️ متن: پیش‌فرض / سفارشی`, `🖼 استیکر: دارد ✅ / ندارد ❌`,

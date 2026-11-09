@@ -116,6 +116,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $writes[] = fn() => gw_pay_override_set('cardtrustmin', $lang, $trustN === '' ? '' : (string) (int) $trustN);
                 }
             }
+            // 📅 members who joined by this Gregorian day count too (the bot's
+            // «📅 عضوهای قبل از تاریخ»); empty = no date rule
+            $trustDate = trim((string) ($_POST['cl_trustdate'] ?? ''));
+            if ($trustDate !== card_trust_date($lang)) {
+                $trustD = $trustDate === '' ? '' : card_trust_date_parse($trustDate);
+                if ($trustD === null) {
+                    $err = $t['gwCardTrustDateInvalid'];
+                } else {
+                    $writes[] = fn() => gw_pay_override_set('cardtrustdate', $lang, $trustD);
+                }
+            }
             // 👥 🆕 what a new user of this language starts with
             $wantNew = ($_POST['cl_new'] ?? '') === '1';
             if ($wantNew !== (card_new_default($lang) === '1')) {
@@ -320,6 +331,9 @@ $chk = fn($name, $on, $label) => '<label class="lang-chip"><input type="hidden" 
         <div class="set-ctl"><input type="text" class="input" name="cl_time" value="<?= intval(pay_value('timeauto_not_verify', $lang, '0')) ?>" inputmode="numeric"></div></div>
       <div class="set-row"><div><div class="set-label">⟦i:shield-check⟧ <?= $t['gwCardTrustMin'] ?></div><div class="set-hint"><?= $t['gwCardTrustMinHint'] ?></div></div>
         <div class="set-ctl"><input type="text" class="input" name="cl_trustmin" value="<?= card_trust_min($lang) ?>" inputmode="numeric"></div></div>
+      <?php $trustDay = card_trust_date($lang); ?>
+      <div class="set-row"><div><div class="set-label">⟦i:calendar⟧ <?= $t['gwCardTrustDate'] ?></div><div class="set-hint"><?= $t['gwCardTrustDateHint'] ?><?= $trustDay !== '' ? '<br>' . sprintf($t['gwCardTrustDateNow'], htmlspecialchars(card_trust_date_label($lang)), number_format(card_trust_date_count($lang))) : '' ?></div></div>
+        <div class="set-ctl"><input type="date" class="input" name="cl_trustdate" value="<?= htmlspecialchars($trustDay) ?>" min="2000-01-01" max="2100-12-31" dir="ltr"></div></div>
       <div class="set-row"><div><div class="set-label"><?= $t['gwCardHelp'] ?></div><div class="set-hint"><?= $t['gwCardHelpHint'] ?><?= is_array($help) && in_array($help['type'] ?? '', ['photo', 'video'], true) ? '<br>' . sprintf($t['gwCardHelpMedia'], $help['type'] === 'photo' ? '⟦i:image⟧' : '⟦i:clapperboard⟧') : '' ?></div></div>
         <div class="set-ctl"><textarea class="textarea" name="cl_help" rows="3" dir="auto"><?= htmlspecialchars((string) ($help['text'] ?? '')) ?></textarea>
           <?php if ($help !== null): ?><label class="lang-chip" style="margin-top:6px"><input type="checkbox" name="cl_help_shared" value="1"> <?= $t['gwCardHelpShared'] ?></label><?php endif; ?></div></div>

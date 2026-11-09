@@ -1453,7 +1453,7 @@ require 'config.php';
 require 'botapi.php';
 require 'panels.php';
 require 'function.php';
-require 'jdf.php';
+require_once 'jdf.php';
 require 'vendor/autoload.php';
 if (!function_exists('activecron')) { exit(3); }
 activecron();
@@ -4416,7 +4416,7 @@ require 'config.php';
 require 'botapi.php';
 require 'panels.php';
 require 'function.php';
-require 'jdf.php';
+require_once 'jdf.php';
 require 'vendor/autoload.php';
 echo bot_update_notify_admins(getenv('CIRO_DOMAIN') ?: '', getenv('CIRO_NEW') ?: '', getenv('CIRO_BACKUP') ?: '');
 NOTIFYEOF
@@ -4569,7 +4569,7 @@ require 'config.php';
 require 'botapi.php';
 require 'panels.php';
 require 'function.php';
-require 'jdf.php';
+require_once 'jdf.php';
 require 'vendor/autoload.php';
 bot_update_finish_edit(
     getenv('MZ_CHAT'),
@@ -4709,7 +4709,7 @@ require 'config.php';
 require 'botapi.php';
 require 'panels.php';
 require 'function.php';
-require 'jdf.php';
+require_once 'jdf.php';
 require 'vendor/autoload.php';
 bkimp_finish_edit(getenv('MZ_CHAT'), getenv('MZ_MSG'), getenv('MZ_LANG'), getenv('MZ_RESULTS'), getenv('MZ_OK') === '1');
 FINEOF
@@ -5573,7 +5573,7 @@ require 'config.php';
 require 'botapi.php';
 require 'panels.php';
 require 'function.php';
-require 'jdf.php';
+require_once 'jdf.php';
 require 'vendor/autoload.php';
 if (!function_exists('activecron')) { exit(3); }
 activecron();
@@ -6032,7 +6032,7 @@ require 'config.php';
 require 'botapi.php';
 require 'panels.php';
 require 'function.php';
-require 'jdf.php';
+require_once 'jdf.php';
 require 'vendor/autoload.php';
 if (!function_exists('activecron')) { exit(3); }
 activecron();
@@ -6787,7 +6787,7 @@ require 'config.php';
 require 'botapi.php';
 require 'panels.php';
 require 'function.php';
-require 'jdf.php';
+require_once 'jdf.php';
 require 'vendor/autoload.php';
 if (!function_exists('activecron')) { exit(3); }
 activecron();

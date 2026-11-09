@@ -1,6 +1,6 @@
 ---
 name: telegram-bot-customization
-description: Build a complete admin-editable customization system (the "🎨 شخصی‌سازی" menu) into a Telegram bot, so the bot owner can change every customer-facing message, button, sticker, reaction, emoji (including premium emoji), colour, order and on/off switch per language, from inside the bot and from a web admin panel. Use this whenever you build or extend any Telegram bot (in any language or framework - PHP, Python, Node, Go), add a new customer-facing message, button, screen or feature to a bot, design an admin panel or settings menu for a bot, add a self-update / «🔄 آپدیت ربات» / rollback / what's-new feature to a bot, make a bot multilingual, or the user mentions 🎨, شخصی‌سازی, customization, editable texts, button colours, stickers, premium emoji, "per language", or a web panel for a bot - even if they do not say "customization".
+description: Build a complete admin-editable customization system (the "🎨 شخصی‌سازی" menu) into any Telegram bot, so the owner can change every customer-facing message, button, sticker, reaction, premium emoji, colour, order and on/off switch per language, from the bot and a web admin panel. Use this whenever you build or extend a Telegram bot in any language or framework, add a customer-facing message, button, screen or feature, design an admin panel or settings menu, give each path or feature its own captions and buttons (a downloader with Instagram / TikTok / X paths, a shop with buy / renew / top-up paths), add a self-update («🔄 آپدیت ربات», rollback, what's new) a statistics screen («📊 آمار ربات», web dashboard) or status reports («گزارش وضعیت» - report group, nightly report, cron status, uptime alerts), make a bot multilingual, or the user mentions 🎨, شخصی‌سازی, customization, editable texts, button colours, stickers, premium emoji, "per language", آمار or a bot web panel - even if they do not say "customization".
 ---
 
 # Telegram bot customization (🎨)
@@ -99,6 +99,40 @@ must appear in the layout automatically, at a sensible default position, and mus
 
 More detail, including every screen and callback naming, in `references/admin-screens.md`.
 
+## Paths: every path customizable on its own
+
+Most bots have several **paths**: branches that each send their own messages and buttons. A
+downloader has one per platform (Instagram, TikTok, X, YouTube…); a shop has one per feature
+(buy, renew, top-up, my services, test account, hourly account, referral…); a support bot has
+one per department. These are examples, not the list: a path is whatever the owner thinks of
+as "a part of my bot". The admin must be able to customize each path's captions and buttons
+**separately**: the TikTok result can say something different, with different buttons, from
+the Instagram one.
+
+- **A path registry.** One list of paths: `id`, admin label with an emoji, per-language
+  on/off switch, and the texts and button groups it owns. Adding a path means adding a row; it
+  then shows up by itself in 🎨, the web panel, 📐 layout and the feature switches. No path is
+  wired into the menus by hand.
+- **Keys carry the path.** `dl.instagram.caption`, `dl.tiktok.caption`, `dl.x.caption`; button
+  groups too (`dl.tiktok.result_buttons`). Do not reuse one key for several paths just
+  because today the text is the same: tomorrow the owner wants it different.
+- **Lookup order:** this path's override → the override saved for *all paths* → this path's
+  default → the shared default. Every path can be changed alone, and something meant to be
+  the same everywhere is still changed once.
+- **Know the path at the start of the flow** (from the link, the button, the command) and pass
+  it to every text and button lookup of that flow, including messages sent later (a cron, a
+  payment callback). Store it with the job or the order when the flow is asynchronous.
+- **Say what is shared.** When an item really is one for several paths (the channel link, a
+  payment button that appears in five places), the editor says so on screen: "🔗 مشترک بین ۳
+  مسیر: اینستاگرام، تیک‌تاک، توییتر". Otherwise it says "📍 فقط برای مسیر تیک‌تاک". The admin
+  never has to guess where a change will show.
+- **Two shortcuts** on every path item: `📋 کپی از مسیر دیگه` (take another path's text and
+  buttons as a start) and `🔗 اعمال روی همهٔ مسیرها` (save as the all-paths override).
+- **Default: separate.** Shared only when the thing is genuinely one (and then labelled).
+
+Screens and storage for this: `references/admin-screens.md` (path picker, path group) and
+`references/data-model.md` (registry, keys, resolver).
+
 ## Feature switches
 
 - A features screen per scope: "global" (whole bot) and "per language" (this tab only). Each row
@@ -131,6 +165,27 @@ switches). Save without reloading the page (fetch + toast), show the new state i
   with the fix for longer ones. Never "unknown error".
 - Every list that can grow: paging, and search when long.
 
+## 📊 Bot statistics
+
+Every bot gets "📊 آمار ربات" as the first admin button, built like Ciro's: language tabs
+(each language counted on its own, in its currency), an overall view (users, buyers, tests,
+wallets, sales, active sales, renewals, conversion, average per customer, monthly forecast,
+renewal share, agents, panels, sales per gateway), period buttons (last hour, today,
+yesterday, this month, last month, chosen dates) with count and sum for every paid action,
+per-path and per-server numbers, and the same figures on the web panel's dashboard, whose
+counters reset to a baseline without deleting anything. Full design and counting rules:
+`references/bot-stats.md`.
+
+## Status reports («گزارش وضعیت»)
+
+Every bot tells its owner what is happening, like Ciro: a Telegram report group with one topic
+per kind of report (purchases, services, tests, money, commissions, errors, other, nightly,
+notices, backups), each report self-contained (who, what, where, how much, order id, a
+manage-user button); a nightly summary; a «⏱ وضعیت کرون‌ها» screen fed by a heartbeat from every
+cron; and uptime alerts for panels and nodes that remind on an interval instead of flooding.
+Reports never block the action they describe, but a payment that failed after the customer
+paid is always reported. Full design: `references/status-reports.md`.
+
 ## Self-update
 
 If the bot needs an update feature (an admin button that updates the bot, keeps config and
@@ -143,6 +198,6 @@ admin in their own language.
 ## Before you say it is done
 
 Run through `references/checklist.md`. In short: texts in every language, registry entry, 🎨
-item opens and edits, buttons through the shared renderer, switch defaults off, web panel shows
+item opens and edits, each path customizable on its own, buttons through the shared renderer, switch defaults off, web panel shows
 it, receiver-language checked, test on a rig with a fake Telegram API, and a "what's new" note
 for the admin that says where to find it (menu path, step by step).

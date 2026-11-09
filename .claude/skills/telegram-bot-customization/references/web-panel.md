@@ -8,6 +8,9 @@ the bot never has settings the panel cannot reach (except things that only make 
 - **Texts**: group tabs from the registry, a search box, "only customized" filter, per item a
   textarea with the current text, the default shown beside it, a sticker file_id field, a reset
   link. Language tabs at the top.
+- **Paths**: when the bot has paths, the texts and buttons pages get path tabs (one per path
+  in the registry, plus "همهٔ مسیرها") under the language tabs; each item says whether it is
+  path-only or shared, and has "copy from path" and "apply to all paths".
 - **Buttons / looks**: per button group, rows of name / emoji / colour / side / hidden; a live
   preview of the keyboard; drag to reorder; row width.
 - **Features**: cards per feature with switches; a feature's settings inside its card.

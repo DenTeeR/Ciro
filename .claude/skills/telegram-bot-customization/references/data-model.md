@@ -57,6 +57,23 @@ One list drives the bot's 🎨 menu and the web panel's pages.
 - Button groups get their own entries (a button group id plus the message key it belongs to).
 - An item id is never reused for something else.
 
+## 3b. Paths
+
+```php
+// one row per path; menus, web panel tabs, layout and switches are built from this list
+'paths' => [
+  'instagram' => ['label' => '📸 اینستاگرام', 'switch' => 'dl_instagram_on',
+                  'texts' => ['dl.instagram.ask', 'dl.instagram.caption', 'dl.instagram.error'],
+                  'buttons' => ['dl.instagram.result_buttons']],
+  'tiktok'    => ['label' => '🎵 تیک‌تاک',   'switch' => 'dl_tiktok_on',  …],
+  'x'         => ['label' => '🐦 توییتر',    'switch' => 'dl_x_on',       …],
+],
+```
+
+Overrides keep the normal maps (`texts[lang][key]`, `buttons[lang][key]`…). The all-paths
+override of a family of keys is stored under the key with `_all` in the path's place
+(`dl._all.caption`), so "apply to every path" is one row, and a path can still override it.
+
 ## 4. Resolver
 
 ```
@@ -66,6 +83,18 @@ function text(key, lang, receiver):
     v = defaults[lang][key]                  -> if non-empty: return v
     return defaults[PRIMARY][key] or key     # never empty
 ```
+
+With paths, a key `family.path.name` is looked up in this order, stopping at the first
+non-empty value:
+
+```
+overrides.texts[lang]["family.path.name"]      # this path, changed by the admin
+overrides.texts[lang]["family._all.name"]      # all paths, changed by the admin
+defaults[lang]["family.path.name"]             # this path's default text
+defaults[lang]["family._all.name"]             # the shared default text
+```
+
+Buttons, stickers, reactions and layout follow the same chain.
 
 Then, when sending: look up sticker/reaction for the same (lang, key), send the sticker first
 (remember its message id so the screen can remove it later), then the text, then set the

@@ -3554,6 +3554,9 @@ if (!function_exists('card_legacy_settings_payload')) {
         ]];
         if ($trustOn) {
             $kb['inline_keyboard'][] = [['text' => '✏️ تغییر تعداد خرید/تمدید لازم', 'callback_data' => "cardtrustmin:{$lang}", 'style' => 'primary']];
+            // 📅 members since a day count as returning customers too
+            $trustDate = card_trust_date($lang);
+            $kb['inline_keyboard'][] = [['text' => '📅 عضوهای قبل از تاریخ: ' . ($trustDate !== '' ? "✅ تا {$trustDate}" : '❌'), 'callback_data' => "cardtrustdate:{$lang}", 'style' => 'primary']];
         }
         $kb['inline_keyboard'][] = [['text' => '📚 آموزش کارت‌به‌کارت: ' . (pay_value('helpcart', $lang, '2') != '2' ? '✅ تنظیم شده' : '❌ تنظیم نشده'), 'callback_data' => "cardlegacyhelp:{$lang}", 'style' => 'primary']];
         if (gw_pay_override_has('helpcart', $lang)) {
@@ -3584,6 +3587,7 @@ if (!function_exists('card_legacy_settings_caption')) {
             . '<b>' . $fields['checkpaycartfirst']['label'] . ':</b> ' . $state('checkpaycartfirst') . "\n"
             . '<b>🤖 تایید خودکار رسید:</b> ' . ($autoMin > 0 ? "✅ بعد از <b>{$autoMin}</b> دقیقه" : '❌') . "\n"
             . '<b>' . $fields['cardtrust']['label'] . ':</b> ' . (card_trust_on($lang) ? '✅ بیش از <b>' . card_trust_min($lang) . '</b> خرید/تمدید موفق' : '❌') . "\n"
+            . (card_trust_on($lang) ? '<b>📅 عضوهای قبل از تاریخ:</b> ' . (card_trust_date($lang) !== '' ? '✅ تا <b>' . card_trust_date_label($lang) . '</b> · <b>' . card_trust_date_count($lang) . '</b> نفر' : '❌') . "\n" : '')
             . '<b>📚 آموزش کارت‌به‌کارت:</b> ' . (pay_value('helpcart', $lang, '2') != '2' ? '✅ تنظیم شده' : '❌ تنظیم نشده') . "\n"
             . "<b>👥 کارت‌به‌کارت کاربرها:</b> ✅ <b>{$accOn}</b> · ❌ <b>{$accOff}</b>\n"
             . '<b>🚫 استثنا از تایید خودکار:</b> <b>' . count(card_exc_members($lang)) . "</b> نفر</blockquote>\n";
@@ -3591,7 +3595,10 @@ if (!function_exists('card_legacy_settings_caption')) {
             $cap .= "🔒 <i>چون SMS Forward روشنه، تایید خودکار رسید قفله.</i>\n";
         }
         if (card_trust_on($lang)) {
-            $cap .= '<blockquote>🛡 فقط مشتری‌ای که <b>بیش از ' . card_trust_min($lang) . "</b> خرید یا تمدید پرداخت‌شده داشته، دکمه‌ی کارت‌به‌کارت رو می‌بینه؛ بقیه نمی‌بینن. به محض رسیدن به این عدد، کارت‌به‌کارت خودکار براش روشن می‌شه. اگه بعدش برای یه مشتری خاموشش کنید، خاموش می‌مونه.</blockquote>\n";
+            $trustDate = card_trust_date($lang);
+            $cap .= '<blockquote>🛡 فقط مشتری‌ای که <b>بیش از ' . card_trust_min($lang) . '</b> خرید یا تمدید پرداخت‌شده داشته'
+                . ($trustDate !== '' ? '، یا <b>تا آخر ' . $trustDate . '</b> عضو ربات شده،' : '،')
+                . " دکمه‌ی کارت‌به‌کارت رو می‌بینه؛ بقیه نمی‌بینن. به محض اینکه مشتری یکی از این‌ها رو داشته باشه، کارت‌به‌کارت خودکار براش روشن می‌شه. اگه بعدش برای یه مشتری خاموشش کنید، خاموش می‌مونه.</blockquote>\n";
         }
         return $cap . '<i>همه‌ی این تنظیمات فقط برای کاربرهای همین زبانه.</i>';
     }
@@ -13421,6 +13428,44 @@ SMS Forward پرداخت رو با پیامک واقعی بانک تایید م�
     step('home', $from_id);
     deletemessage($from_id, (int) $cl_m[3]);
     Editmessagetext($from_id, (int) $cl_m[2], card_legacy_settings_caption($cl_m[1]), card_legacy_settings_payload($cl_m[1], $textbotlang), 'HTML');
+} elseif (preg_match('/^cardtrustdate:([a-z]{2})$/', $datain, $cl_m) && $adminrulecheck['rule'] == "administrator") {
+    // 📅 members who joined by a Gregorian day count as returning customers
+    $cl_now = card_trust_date($cl_m[1]);
+    $cl_kb = [];
+    if ($cl_now !== '') {
+        $cl_kb[] = [['text' => '🗑 حذف تاریخ', 'callback_data' => "cardtrustdateclear:{$cl_m[1]}:{$message_id}", 'style' => 'danger']];
+    }
+    $cl_kb[] = [['text' => '❌ انصراف', 'callback_data' => "cardtrustmincancel:{$cl_m[1]}:{$message_id}", 'style' => 'danger']];
+    $cl_prompt = sendmessage($from_id, "📅 <b>کارت‌به‌کارت برای عضوهای قدیمی</b>\n\n<blockquote>هر کاربری که <b>تا آخر این روز</b> عضو ربات شده، دکمه‌ی کارت‌به‌کارت رو می‌بینه؛ حتی اگه هنوز به تعداد خرید/تمدید لازم نرسیده. کاربرهای بعد از این روز مثل قبل باید به تعداد خرید/تمدید برسن.\n\nتاریخ <b>میلادی</b> بفرست: سال-ماه-روز، مثلاً <code>2026-11-02</code>.</blockquote>\nالان: <b>" . ($cl_now !== '' ? card_trust_date_label($cl_m[1]) . '</b> · <b>' . card_trust_date_count($cl_m[1]) . '</b> نفر' : 'تنظیم نشده</b>'), json_encode(['inline_keyboard' => $cl_kb]), 'HTML');
+    $cl_promptId = (int) ($cl_prompt['result']['message_id'] ?? 0);
+    step("cardtrustdate:{$cl_m[1]}:{$message_id}:{$cl_promptId}", $from_id);
+} elseif (preg_match('/^cardtrustdateclear:([a-z]{2}):([0-9]+)$/', $datain, $cl_m) && $adminrulecheck['rule'] == "administrator") {
+    gw_pay_override_set('cardtrustdate', $cl_m[1], '');
+    step('home', $from_id);
+    deletemessage($from_id, $message_id);
+    telegram('answerCallbackQuery', [
+        'callback_query_id' => $callback_query_id,
+        'text' => '🗑 تاریخ حذف شد؛ فقط تعداد خرید/تمدید حساب می‌شه.',
+        'show_alert' => false,
+    ]);
+    Editmessagetext($from_id, (int) $cl_m[2], card_legacy_settings_caption($cl_m[1]), card_legacy_settings_payload($cl_m[1], $textbotlang), 'HTML');
+} elseif (preg_match('/^cardtrustdate:([a-z]{2}):([0-9]+):([0-9]+)$/', (string) $user['step'], $cl_m) && $datain == '') {
+    $cl_d = card_trust_date_parse((string) $text);
+    deletemessage($from_id, $message_id);
+    if ($cl_d === null) {
+        // the prompt stays and says what went wrong - no second message
+        $cl_kb = [];
+        if (card_trust_date($cl_m[1]) !== '') {
+            $cl_kb[] = [['text' => '🗑 حذف تاریخ', 'callback_data' => "cardtrustdateclear:{$cl_m[1]}:{$cl_m[2]}", 'style' => 'danger']];
+        }
+        $cl_kb[] = [['text' => '❌ انصراف', 'callback_data' => "cardtrustmincancel:{$cl_m[1]}:{$cl_m[2]}", 'style' => 'danger']];
+        Editmessagetext($from_id, (int) $cl_m[3], "⛔️ این تاریخ درست نیست.\n\n<blockquote>تاریخ میلادی رو به شکل سال-ماه-روز بفرست، مثلاً <code>2026-11-02</code>.</blockquote>", json_encode(['inline_keyboard' => $cl_kb]), 'HTML');
+        return;
+    }
+    gw_pay_override_set('cardtrustdate', $cl_m[1], $cl_d);
+    step('home', $from_id);
+    deletemessage($from_id, (int) $cl_m[3]);
+    Editmessagetext($from_id, (int) $cl_m[2], card_legacy_settings_caption($cl_m[1]), card_legacy_settings_payload($cl_m[1], $textbotlang), 'HTML');
 } elseif (preg_match('/^cardlegacyhelp:([a-z]{2})$/', $datain, $cl_m) && $adminrulecheck['rule'] == "administrator") {
     $cl_prompt = sendmessage($from_id, $textbotlang['Admin']['Help']['askTutorialMedia'], null, 'HTML');
     $cl_promptId = (int) ($cl_prompt['result']['message_id'] ?? 0);
@@ -13528,7 +13573,7 @@ SMS Forward پرداخت رو با پیامک واقعی بانک تایید م�
 } elseif (preg_match('/^cardlegacyreset:([a-z]{2})$/', $datain, $cl_m) && $adminrulecheck['rule'] == "administrator") {
     // this language's settings only - card numbers, the users' card access
     // and the 🚫 list stay as they are
-    foreach (['Cartstatuspv', 'checkpaycartfirst', 'autoconfirmcart', 'timeauto_not_verify', 'helpcart', 'showcard', 'cardtrust', 'cardtrustmin'] as $cl_f) {
+    foreach (['Cartstatuspv', 'checkpaycartfirst', 'autoconfirmcart', 'timeauto_not_verify', 'helpcart', 'showcard', 'cardtrust', 'cardtrustmin', 'cardtrustdate'] as $cl_f) {
         gw_pay_override_set($cl_f, $cl_m[1], '');
     }
     telegram('answerCallbackQuery', [
