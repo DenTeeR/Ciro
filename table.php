@@ -1762,6 +1762,17 @@ try {
 } catch (\Throwable $e) {
     error_log('cvol migrate: ' . $e->getMessage());
 }
+// the newer features' columns, on install and update - they are also added at
+// their first use, so a database restored by hand catches up by itself
+try {
+    foreach (['tk_ensure_schema', 'ar_ensure_schema', 'wb_ensure_schema', 'wt_ensure_schema'] as $xf_schema) {
+        if (function_exists($xf_schema)) {
+            $xf_schema();
+        }
+    }
+} catch (\Throwable $e) {
+    error_log('extras schema: ' . $e->getMessage());
+}
 // with its secret, and asking for chat_member too
 webhook_register();
 // 🆕 tell the admins what this update added (whatsnew.php), once

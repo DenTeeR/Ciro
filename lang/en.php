@@ -1893,6 +1893,106 @@ Message text:
                     
 Message text: 
 %s',
+                        // 📨 My tickets (tickets.php)
+                        'tkMyBtn' => '📨 My tickets',
+                        'tkListCaption' => '📨 <b>My tickets</b>
+
+<blockquote>Tap a ticket to read its conversation and write in it.
+🟡 Waiting for a reply · 🟢 Answered · ⚫️ Closed</blockquote>
+Tickets: <b>{count}</b>',
+                        'tkListEmpty' => '📭 <b>You have not sent a ticket yet.</b>
+
+<blockquote>Pick a section under «📩 Message support» and send your message; photos and videos are welcome.</blockquote>',
+                        'tkViewCaption' => '🎫 <b>Ticket {id}</b>
+🗂 Section: <b>{department}</b>
+📍 Status: {status}
+
+{messages}',
+                        'tkMsgYou' => '👤 <b>You</b> · {time}',
+                        'tkMsgSupport' => '🎧 <b>Support</b> · {time}',
+                        'tkOlderHidden' => '<i>… {count} older messages</i>',
+                        'tkAttachment' => '📎 Attachment',
+                        'tkStateOpen' => '🟡 Waiting for a reply',
+                        'tkStateAnswered' => '🟢 Answered',
+                        'tkStateClosed' => '⚫️ Closed',
+                        'tkWriteBtn' => '✍️ Write in this ticket',
+                        'tkCloseBtn' => '🔒 Close ticket',
+                        'tkBackBtn' => '🔙 Back to tickets',
+                        'tkBackSupportBtn' => '🔙 Back',
+                        'tkOpenBtn' => '📨 Open ticket',
+                        'tkClosedAlert' => '🔒 The ticket is closed. You can write in it again any time.',
+                        'tkGone' => '⛔️ This ticket was not found.',
+                        'tkClosedBySupport' => '🔒 <b>Ticket {id} was closed.</b>
+
+<blockquote>Support closed this ticket. If you still have a question, write in the same ticket and it opens again.</blockquote>',
+                ],
+                // 🔁 Auto-renew (autorenew.php)
+                'autorenew' => [
+                        'btnOn' => '🔁 Auto-renew: on ✅',
+                        'btnOff' => '🔁 Auto-renew: off ❌',
+                        'btnTopup' => '💰 Top up',
+                        'turnedOn' => '✅ Auto-renew is on.
+When less than {hours} hours are left or the volume runs out, it renews with «{product}» ({price}) from your wallet.',
+                        'turnedOff' => '❌ Auto-renew is off for this service.',
+                        'unavailable' => '⛔️ Auto-renew is not available for this service.',
+                        'noPlan' => '⛔️ The plan this service renews with is no longer sold; renew it once by hand.',
+                        'noPlanNotice' => '⚠️ <b>Service {service} was not renewed automatically.</b>
+
+<blockquote>The plan it renewed with is no longer sold. Renew it once by hand from «🛍 My services».</blockquote>',
+                        'lowBalance' => '⚠️ <b>Not enough balance to auto-renew {service}.</b>
+
+<blockquote>💰 Renewal price: <b>{price}</b>
+👛 Your balance: <b>{balance}</b></blockquote>
+Top up your wallet so the service renews before it ends.',
+                        'done' => '🔁 <b>Service {service} was renewed automatically.</b>
+
+<blockquote>📦 Plan: <b>{product}</b>
+💰 Price: <b>{price}</b>
+👛 Your balance: <b>{balance}</b></blockquote>
+To turn it off, open this service in «🛍 My services».',
+                        'failed' => '⚠️ <b>Service {service} could not be renewed automatically.</b>
+
+<blockquote>Nothing was taken from your wallet. Please renew it by hand or message support.</blockquote>',
+                ],
+                // 💌 Win-back (winback.php)
+                'winback' => [
+                        'message' => '💌 <b>We miss you!</b>
+
+<blockquote>Your service {service} ended a few days ago. Come back within <b>{days} days</b> and get <b>{percent}% off</b> your next purchase or renewal.</blockquote>
+The discount is applied on the invoice by itself; no code needed.',
+                        'btnBuy' => '🛍 Buy a subscription',
+                ],
+                // 💸 Balance transfer (wtransfer.php)
+                'wtransfer' => [
+                        'entryBtn' => '💸 Transfer balance',
+                        'confirmBtn' => '✅ Confirm and transfer',
+                        'cancelBtn' => '❌ Cancel',
+                        'askId' => '💸 <b>Transfer balance</b>
+
+<blockquote>Send the numeric ID of the person you want to give balance to. Everyone sees their own numeric ID in «👤 Account».</blockquote>
+👛 Your balance: <b>{balance}</b>',
+                        'askAmount' => '💸 Transfer to <b>{to}</b>
+
+<blockquote>How much should be transferred? Send just the number.
+Minimum: <b>{min}</b> · Maximum: <b>{max}</b></blockquote>
+👛 Your balance: <b>{balance}</b>',
+                        'confirm' => '💸 <b>Confirm the transfer</b>
+
+<blockquote>Amount: <b>{amount}</b>
+To: <b>{to}</b>
+Your balance afterwards: <b>{after}</b></blockquote>
+⚠️ A transfer cannot be undone; check the ID once more.',
+                        'done' => '✅ <b>{amount}</b> was transferred to <b>{to}</b>.
+👛 Your balance: <b>{balance}</b>',
+                        'received' => '💸 <b>{amount}</b> from <b>{from}</b> was added to your wallet.
+👛 Your balance: <b>{balance}</b>',
+                        'errNotFound' => '⛔️ There is no user with this ID in the bot.',
+                        'errSelf' => '⛔️ You cannot transfer to yourself.',
+                        'errCurrency' => '⛔️ This user\'s wallet is in another currency; transfers work only between wallets of the same currency.',
+                        'errAmount' => '⛔️ The amount must be a number from {min} to {max}.',
+                        'errLow' => '⛔️ Your balance is not enough for this transfer.',
+                        'expired' => '⛔️ This transfer is no longer valid; start again.',
+                        'cancelled' => '❌ The transfer was cancelled.',
                 ],
                 'transfer' => [
                         'confirm' => '✅ If you confirm, click the button below so that your transfer is completed successfully.',
@@ -5685,6 +5785,41 @@ We hope you had a good experience with the ease and speed of your service. If yo
                 'looksGroupsHint' => 'Gateways of one family share one button on the payment method screen; a family with a single gateway is left as it is',
                 'looksHint' => 'Premium emoji and stickers are set from the bot; here they are only kept or removed.',
                 'looksNameTooLong' => 'An own name is 150 characters at most.',
+                // 📨 Tickets (panel/tickets.php)
+                'tkPageTitle' => 'Tickets',
+                'tkPageLede' => 'Customers\' messages to support, each conversation with its state; answer and close here, as in the bot',
+                'tkListTitle' => 'Tickets',
+                'tkOpenCount' => '%s waiting for a reply',
+                'tkAllStates' => 'All states',
+                'tkStateOpen' => 'Waiting for a reply',
+                'tkStateAnswered' => 'Answered',
+                'tkStateClosed' => 'Closed',
+                'tkSearchPlaceholder' => 'User ID or ticket number',
+                'tkColTicket' => 'Ticket',
+                'tkColUser' => 'User',
+                'tkColDept' => 'Section',
+                'tkColMessages' => 'Messages',
+                'tkColState' => 'State',
+                'tkColLast' => 'Last message',
+                'tkEmpty' => 'No tickets yet.',
+                'tkDbError' => 'Could not read the tickets: ',
+                'tkNotFound' => 'This ticket was not found.',
+                'tkBackToList' => 'Back to the list',
+                'tkFromUser' => 'Customer',
+                'tkFromSupport' => 'Support',
+                'tkMediaPhoto' => 'Photo',
+                'tkMediaVideo' => 'Video',
+                'tkMediaFile' => 'File',
+                'tkMediaVoice' => 'Audio',
+                'tkAnswerTitle' => 'Answer this ticket',
+                'tkAnswerSub' => 'Sent in the customer\'s language with their buttons, like an answer from the bot. Send photos and files from the bot.',
+                'tkAnswerPlaceholder' => 'Write your answer…',
+                'tkAnswerBtn' => 'Send answer',
+                'tkAnswerInvalid' => 'The answer is empty or longer than 3500 characters.',
+                'tkAnswerSent' => 'The answer was sent to the customer.',
+                'tkAnswerFailed' => 'The answer was saved but Telegram did not deliver it (the customer may have blocked the bot).',
+                'tkCloseBtn' => 'Close ticket',
+                'tkClosedOk' => 'The ticket was closed and the customer was told.',
                 'featDpayTitle' => 'Pay directly',
                 'featDpaySub' => 'A «Pay directly» button beside «Confirm and pay from wallet» for %s customers; off by default',
                 'featDpayPaths' => 'Paths',

@@ -46,6 +46,13 @@ class ServiceMonitor
             $data = $this->processInvoice($invoice);
             if (!is_array($data))
                 continue;
+            // 💌 پیام برگشت مشتری (winback.php): when it ended, or that it lives again
+            if (function_exists('wb_track'))
+                wb_track($data['invoice'], $data['userData']);
+            // 🔁 تمدید خودکار (autorenew.php): renewed from the wallet now - the
+            // warnings below would speak of the service as it was before
+            if (function_exists('ar_cron_check') && ar_cron_check($data['invoice'], $data['user'], $data['userData'], $data['panel'], $this->Panel))
+                continue;
             // every low-volume / low-time / ended warning - 🔋's tiers
             $this->checkCustomNotices($data['invoice'], $data['user'], $data['userData'], $invoice['username']);
             // 🎁 a free config not renewed has its own 🗑 rule, never the

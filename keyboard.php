@@ -333,6 +333,10 @@ if (!bt_button_hidden($users['lang'] ?? 'fa', 'bottext.btnTopupAccount')) {
     // unless the shop gives it a colour (🎨 → 👤 → 💰)
     $kp_accountRows[] = [bt_button($users['lang'] ?? 'fa', 'bottext.btnTopupAccount', $customer_texts['textbot']['addBalance'], 'Add_Balance_ac', '')];
 }
+// 💸 انتقال موجودی (wtransfer.php), where this language has it on
+if (function_exists('wt_account_row') && is_array($users) && ($kp_wt = wt_account_row($users)) !== null) {
+    $kp_accountRows[] = $kp_wt;
+}
 if (!bt_button_hidden($users['lang'] ?? 'fa', 'bottext.btnCloseAccount')) {
     $kp_accountRows[] = [bt_button($users['lang'] ?? 'fa', 'bottext.btnCloseAccount', $customer_texts['bottext']['btnCloseAccount'] ?? $customer_texts['bottext']['btn_close'], 'mmclose:ac')];
 }

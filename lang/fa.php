@@ -1509,6 +1509,55 @@ return array (
       'cx_m6' => array ('label' => '✅ پیام برای این درخواست فرستاده شد', 'key' => 'users.support.sentForRequestReview', 'group' => 'misc', 'section' => 'misc_support'),
       'cx_m7' => array ('label' => '🚀 پیام به مدیریت فرستاده شد', 'key' => 'users.support.sendmessageadmin', 'group' => 'misc', 'section' => 'misc_support'),
       'cx_m8' => array ('label' => '✅ پیام فرستاده شد', 'key' => 'users.support.sentSuccess', 'group' => 'misc', 'section' => 'misc_support'),
+      // 📨 تیکت‌های من (tickets.php)
+      'tk_1' => array ('label' => '📨 دکمهٔ «تیکت‌های من» (صفحهٔ پشتیبانی)', 'key' => 'users.support.tkMyBtn', 'group' => 'misc', 'section' => 'misc_support'),
+      'tk_2' => array ('label' => '📨 لیست تیکت‌های من', 'key' => 'users.support.tkListCaption', 'group' => 'misc', 'section' => 'misc_support'),
+      'tk_3' => array ('label' => '📭 هنوز تیکتی نیست', 'key' => 'users.support.tkListEmpty', 'group' => 'misc', 'section' => 'misc_support'),
+      'tk_4' => array ('label' => '🎫 صفحهٔ یک تیکت (گفتگو)', 'key' => 'users.support.tkViewCaption', 'group' => 'misc', 'section' => 'misc_support'),
+      'tk_5' => array ('label' => '👤 عنوان پیام مشتری در گفتگو', 'key' => 'users.support.tkMsgYou', 'group' => 'misc', 'section' => 'misc_support'),
+      'tk_6' => array ('label' => '🎧 عنوان پیام پشتیبانی در گفتگو', 'key' => 'users.support.tkMsgSupport', 'group' => 'misc', 'section' => 'misc_support'),
+      'tk_7' => array ('label' => '🟡 وضعیت «در انتظار پاسخ»', 'key' => 'users.support.tkStateOpen', 'group' => 'misc', 'section' => 'misc_support'),
+      'tk_8' => array ('label' => '🟢 وضعیت «پاسخ داده شد»', 'key' => 'users.support.tkStateAnswered', 'group' => 'misc', 'section' => 'misc_support'),
+      'tk_9' => array ('label' => '⚫️ وضعیت «بسته شد»', 'key' => 'users.support.tkStateClosed', 'group' => 'misc', 'section' => 'misc_support'),
+      'tk_10' => array ('label' => '✍️ دکمهٔ «ارسال پیام در همین تیکت»', 'key' => 'users.support.tkWriteBtn', 'group' => 'misc', 'section' => 'misc_support'),
+      'tk_11' => array ('label' => '🔒 دکمهٔ «بستن تیکت»', 'key' => 'users.support.tkCloseBtn', 'group' => 'misc', 'section' => 'misc_support'),
+      'tk_12' => array ('label' => '🔙 دکمهٔ «برگشت به تیکت‌ها»', 'key' => 'users.support.tkBackBtn', 'group' => 'misc', 'section' => 'misc_support'),
+      'tk_13' => array ('label' => '🔙 دکمهٔ برگشت از لیست تیکت‌ها', 'key' => 'users.support.tkBackSupportBtn', 'group' => 'misc', 'section' => 'misc_support'),
+      'tk_14' => array ('label' => '📨 دکمهٔ «دیدن تیکت» (زیر جواب پشتیبانی)', 'key' => 'users.support.tkOpenBtn', 'group' => 'misc', 'section' => 'misc_support'),
+      'tk_15' => array ('label' => '🔒 پاپ‌آپ «تیکت بسته شد»', 'key' => 'users.support.tkClosedAlert', 'group' => 'misc', 'section' => 'misc_support'),
+      'tk_16' => array ('label' => '⛔️ پاپ‌آپ «تیکت پیدا نشد»', 'key' => 'users.support.tkGone', 'group' => 'misc', 'section' => 'misc_support'),
+      'tk_17' => array ('label' => '🔒 پیام «پشتیبانی تیکت رو بست»', 'key' => 'users.support.tkClosedBySupport', 'group' => 'misc', 'section' => 'misc_support'),
+      // 🔁 تمدید خودکار (autorenew.php)
+      'ar_1' => array ('label' => '🔁 دکمهٔ تمدید خودکار (روشن)', 'key' => 'users.autorenew.btnOn', 'group' => 'msmore', 'section' => 'ms_autorenew'),
+      'ar_2' => array ('label' => '🔁 دکمهٔ تمدید خودکار (خاموش)', 'key' => 'users.autorenew.btnOff', 'group' => 'msmore', 'section' => 'ms_autorenew'),
+      'ar_3' => array ('label' => '✅ پاپ‌آپ «تمدید خودکار روشن شد»', 'key' => 'users.autorenew.turnedOn', 'group' => 'msmore', 'section' => 'ms_autorenew'),
+      'ar_4' => array ('label' => '❌ پاپ‌آپ «تمدید خودکار خاموش شد»', 'key' => 'users.autorenew.turnedOff', 'group' => 'msmore', 'section' => 'ms_autorenew'),
+      'ar_5' => array ('label' => '🔁 پیام «سرویس خودکار تمدید شد»', 'key' => 'users.autorenew.done', 'group' => 'msmore', 'section' => 'ms_autorenew'),
+      'ar_6' => array ('label' => '⚠️ پیام «موجودی برای تمدید خودکار کافی نیست»', 'key' => 'users.autorenew.lowBalance', 'group' => 'msmore', 'section' => 'ms_autorenew'),
+      'ar_7' => array ('label' => '💰 دکمهٔ «افزایش موجودی» زیر پیام موجودی کم', 'key' => 'users.autorenew.btnTopup', 'group' => 'msmore', 'section' => 'ms_autorenew'),
+      'ar_8' => array ('label' => '⚠️ پیام «تمدید خودکار انجام نشد» (پنل خطا داد)', 'key' => 'users.autorenew.failed', 'group' => 'msmore', 'section' => 'ms_autorenew'),
+      'ar_9' => array ('label' => '⚠️ پیام «محصول تمدید دیگه فروخته نمی‌شه»', 'key' => 'users.autorenew.noPlanNotice', 'group' => 'msmore', 'section' => 'ms_autorenew'),
+      'ar_10' => array ('label' => '⛔️ پاپ‌آپ «تمدید خودکار در دسترس نیست»', 'key' => 'users.autorenew.unavailable', 'group' => 'msmore', 'section' => 'ms_autorenew'),
+      'ar_11' => array ('label' => '⛔️ پاپ‌آپ «محصول تمدید دیگه فروخته نمی‌شه»', 'key' => 'users.autorenew.noPlan', 'group' => 'msmore', 'section' => 'ms_autorenew'),
+      // 💌 پیام برگشت مشتری (winback.php)
+      'wb_1' => array ('label' => '💌 پیام برگشت مشتری (با تخفیف)', 'key' => 'users.winback.message', 'group' => 'msmore', 'section' => 'ms_winback'),
+      'wb_2' => array ('label' => '🛍 دکمهٔ «خرید اشتراک» زیر پیام برگشت', 'key' => 'users.winback.btnBuy', 'group' => 'msmore', 'section' => 'ms_winback'),
+      // 💸 انتقال موجودی (wtransfer.php)
+      'wt_1' => array ('label' => '💸 دکمهٔ «انتقال موجودی» (حساب کاربری)', 'key' => 'users.wtransfer.entryBtn', 'group' => 'account', 'section' => 'account_wtransfer'),
+      'wt_2' => array ('label' => '💸 درخواست آیدی گیرنده', 'key' => 'users.wtransfer.askId', 'group' => 'account', 'section' => 'account_wtransfer'),
+      'wt_3' => array ('label' => '💸 درخواست مبلغ', 'key' => 'users.wtransfer.askAmount', 'group' => 'account', 'section' => 'account_wtransfer'),
+      'wt_4' => array ('label' => '💸 صفحهٔ تایید انتقال', 'key' => 'users.wtransfer.confirm', 'group' => 'account', 'section' => 'account_wtransfer'),
+      'wt_5' => array ('label' => '✅ دکمهٔ تایید انتقال', 'key' => 'users.wtransfer.confirmBtn', 'group' => 'account', 'section' => 'account_wtransfer'),
+      'wt_6' => array ('label' => '❌ دکمهٔ انصراف از انتقال', 'key' => 'users.wtransfer.cancelBtn', 'group' => 'account', 'section' => 'account_wtransfer'),
+      'wt_7' => array ('label' => '✅ پیام «انتقال انجام شد» (فرستنده)', 'key' => 'users.wtransfer.done', 'group' => 'account', 'section' => 'account_wtransfer'),
+      'wt_8' => array ('label' => '💸 پیام «موجودی بهت رسید» (گیرنده)', 'key' => 'users.wtransfer.received', 'group' => 'account', 'section' => 'account_wtransfer'),
+      'wt_9' => array ('label' => '⛔️ کاربر پیدا نشد', 'key' => 'users.wtransfer.errNotFound', 'group' => 'account', 'section' => 'account_wtransfer'),
+      'wt_10' => array ('label' => '⛔️ انتقال به خود', 'key' => 'users.wtransfer.errSelf', 'group' => 'account', 'section' => 'account_wtransfer'),
+      'wt_11' => array ('label' => '⛔️ ارز کیف پول فرق داره', 'key' => 'users.wtransfer.errCurrency', 'group' => 'account', 'section' => 'account_wtransfer'),
+      'wt_12' => array ('label' => '⛔️ مبلغ نامعتبر', 'key' => 'users.wtransfer.errAmount', 'group' => 'account', 'section' => 'account_wtransfer'),
+      'wt_13' => array ('label' => '⛔️ موجودی کافی نیست (پاپ‌آپ)', 'key' => 'users.wtransfer.errLow', 'group' => 'account', 'section' => 'account_wtransfer'),
+      'wt_14' => array ('label' => '⛔️ انتقال دیگه معتبر نیست (پاپ‌آپ)', 'key' => 'users.wtransfer.expired', 'group' => 'account', 'section' => 'account_wtransfer'),
+      'wt_15' => array ('label' => '❌ انتقال لغو شد', 'key' => 'users.wtransfer.cancelled', 'group' => 'account', 'section' => 'account_wtransfer'),
       'cx_m9' => array ('label' => '💝 درخواست کد هدیه', 'key' => 'users.Discount.getcode', 'group' => 'misc', 'section' => 'misc_gift'),
       'cx_m10' => array ('label' => '🥳 کد هدیه ثبت شد', 'key' => 'users.Discount.giftcodesuccess', 'group' => 'misc', 'section' => 'misc_gift'),
       'cx_m11' => array ('label' => '❌ کد نامعتبر', 'key' => 'users.Discount.notcode', 'group' => 'misc', 'section' => 'misc_gift'),
@@ -3174,6 +3223,109 @@ n2  = نماینده با قابلیت های بیشتر',
                     
 متن پیام : 
 %s',
+      // 📨 تیکت‌های من (tickets.php)
+      'tkMyBtn' => '📨 تیکت‌های من',
+      'tkListCaption' => '📨 <b>تیکت‌های من</b>
+
+<blockquote>روی هر تیکت بزن تا گفتگوش رو ببینی و توی همون تیکت پیام بدی.
+🟡 در انتظار پاسخ · 🟢 پاسخ داده شد · ⚫️ بسته شد</blockquote>
+تعداد تیکت‌ها: <b>{count}</b>',
+      'tkListEmpty' => '📭 <b>هنوز تیکتی نفرستادی.</b>
+
+<blockquote>از «📩 ارسال پیام به پشتیبانی» بخش رو انتخاب کن و پیامت رو بفرست؛ عکس و ویدیو هم قبوله.</blockquote>',
+      'tkViewCaption' => '🎫 <b>تیکت {id}</b>
+🗂 بخش: <b>{department}</b>
+📍 وضعیت: {status}
+
+{messages}',
+      'tkMsgYou' => '👤 <b>شما</b> · {time}',
+      'tkMsgSupport' => '🎧 <b>پشتیبانی</b> · {time}',
+      'tkOlderHidden' => '<i>… {count} پیام قدیمی‌تر</i>',
+      'tkAttachment' => '📎 پیوست',
+      'tkStateOpen' => '🟡 در انتظار پاسخ',
+      'tkStateAnswered' => '🟢 پاسخ داده شد',
+      'tkStateClosed' => '⚫️ بسته شد',
+      'tkWriteBtn' => '✍️ ارسال پیام در همین تیکت',
+      'tkCloseBtn' => '🔒 بستن تیکت',
+      'tkBackBtn' => '🔙 برگشت به تیکت‌ها',
+      'tkBackSupportBtn' => '🔙 برگشت',
+      'tkOpenBtn' => '📨 دیدن تیکت',
+      'tkClosedAlert' => '🔒 تیکت بسته شد. هر وقت خواستی می‌تونی دوباره توش پیام بدی.',
+      'tkGone' => '⛔️ این تیکت پیدا نشد.',
+      'tkClosedBySupport' => '🔒 <b>تیکت {id} بسته شد.</b>
+
+<blockquote>پشتیبانی این تیکت رو بست. اگه هنوز سوالی داری، توی همون تیکت پیام بده تا دوباره باز بشه.</blockquote>',
+    ),
+    // 🔁 تمدید خودکار (autorenew.php)
+    'autorenew' => 
+    array (
+      'btnOn' => '🔁 تمدید خودکار: روشن ✅',
+      'btnOff' => '🔁 تمدید خودکار: خاموش ❌',
+      'btnTopup' => '💰 افزایش موجودی',
+      'turnedOn' => '✅ تمدید خودکار روشن شد.
+وقتی کمتر از {hours} ساعت به پایان سرویس مونده باشه یا حجمش تموم بشه، با «{product}» ({price}) از کیف پولت تمدید می‌شه.',
+      'turnedOff' => '❌ تمدید خودکار برای این سرویس خاموش شد.',
+      'unavailable' => '⛔️ تمدید خودکار برای این سرویس در دسترس نیست.',
+      'noPlan' => '⛔️ محصولی که این سرویس باهاش تمدید می‌شه دیگه فروخته نمی‌شه؛ یه بار دستی تمدیدش کن.',
+      'noPlanNotice' => '⚠️ <b>تمدید خودکار سرویس {service} انجام نشد.</b>
+
+<blockquote>محصولی که این سرویس باهاش تمدید می‌شد دیگه فروخته نمی‌شه. از «🛍 سرویس‌های من» یه بار دستی تمدیدش کن.</blockquote>',
+      'lowBalance' => '⚠️ <b>موجودی برای تمدید خودکار سرویس {service} کافی نیست.</b>
+
+<blockquote>💰 مبلغ تمدید: <b>{price}</b>
+👛 موجودی فعلی: <b>{balance}</b></blockquote>
+کیف پولت رو شارژ کن تا سرویس قبل از تموم شدن خودکار تمدید بشه.',
+      'done' => '🔁 <b>سرویس {service} خودکار تمدید شد.</b>
+
+<blockquote>📦 محصول: <b>{product}</b>
+💰 مبلغ: <b>{price}</b>
+👛 موجودی فعلی: <b>{balance}</b></blockquote>
+برای خاموش کردنش، توی «🛍 سرویس‌های من» همین سرویس رو باز کن.',
+      'failed' => '⚠️ <b>تمدید خودکار سرویس {service} انجام نشد.</b>
+
+<blockquote>مبلغی از کیف پولت کم نشد. لطفاً دستی تمدید کن یا به پشتیبانی پیام بده.</blockquote>',
+    ),
+    // 💌 پیام برگشت مشتری (winback.php)
+    'winback' => 
+    array (
+      'message' => '💌 <b>دلمون برات تنگ شده!</b>
+
+<blockquote>سرویس {service} چند روزیه تموم شده. اگه برگردی، تا <b>{days} روز</b> روی خرید یا تمدید بعدیت <b>{percent}٪ تخفیف</b> داری.</blockquote>
+تخفیف خودکار روی فاکتور حساب می‌شه؛ کدی لازم نیست.',
+      'btnBuy' => '🛍 خرید اشتراک',
+    ),
+    // 💸 انتقال موجودی (wtransfer.php)
+    'wtransfer' => 
+    array (
+      'entryBtn' => '💸 انتقال موجودی',
+      'confirmBtn' => '✅ تایید و انتقال',
+      'cancelBtn' => '❌ انصراف',
+      'askId' => '💸 <b>انتقال موجودی</b>
+
+<blockquote>آیدی عددی کسی که می‌خوای بهش موجودی بدی رو بفرست. هر کسی آیدی عددی خودش رو توی «👤 حساب کاربری» می‌بینه.</blockquote>
+👛 موجودی تو: <b>{balance}</b>',
+      'askAmount' => '💸 انتقال به <b>{to}</b>
+
+<blockquote>چه مبلغی منتقل بشه؟ فقط عدد بفرست.
+حداقل: <b>{min}</b> · حداکثر: <b>{max}</b></blockquote>
+👛 موجودی تو: <b>{balance}</b>',
+      'confirm' => '💸 <b>تایید انتقال</b>
+
+<blockquote>مبلغ: <b>{amount}</b>
+به: <b>{to}</b>
+موجودی تو بعد از انتقال: <b>{after}</b></blockquote>
+⚠️ انتقال برگشت‌پذیر نیست؛ آیدی رو یه بار دیگه چک کن.',
+      'done' => '✅ <b>{amount}</b> به <b>{to}</b> منتقل شد.
+👛 موجودی فعلی: <b>{balance}</b>',
+      'received' => '💸 <b>{amount}</b> از طرف <b>{from}</b> به کیف پولت اضافه شد.
+👛 موجودی فعلی: <b>{balance}</b>',
+      'errNotFound' => '⛔️ کاربری با این آیدی توی ربات نیست.',
+      'errSelf' => '⛔️ نمی‌تونی به خودت انتقال بدی.',
+      'errCurrency' => '⛔️ کیف پول این کاربر ارز دیگه‌ای داره؛ انتقال فقط بین کیف پول‌های هم‌ارز ممکنه.',
+      'errAmount' => '⛔️ مبلغ باید عدد و بین {min} تا {max} باشه.',
+      'errLow' => '⛔️ موجودی‌ت برای این انتقال کافی نیست.',
+      'expired' => '⛔️ این انتقال دیگه معتبر نیست؛ از اول شروعش کن.',
+      'cancelled' => '❌ انتقال لغو شد.',
     ),
     'transfer' => 
     array (
@@ -4075,6 +4227,7 @@ n2',
         'rbnodes' => 'پایش نودهای ربکا',
         'uptime_panel' => 'وضعیت پنل‌ها',
         'expireagent' => 'انقضای نمایندگی',
+        'winback' => 'پیام برگشت مشتری',
       ),
     ),
     'agentbot' => 
@@ -4442,6 +4595,75 @@ split: کارمزد نصف‌نصف.
       'botPasswordClearedDone' => '✅ رمز بکاپ فولدر ربات حذف شد؛ از این به بعد فایل بدون رمز فرستاده می‌شه.',
     ),
     // 🧩 حجم دلخواه (cvol.php): the settings hub of a panel's custom plans
+    // 📨 تیکت‌های پشتیبانی (tickets.php) - the supporter's and admin's side
+    'Tickets' => 
+    array (
+      'closeBtn' => '🔒 بستن تیکت',
+      'closedMark' => '🔒 تیکت بسته شد',
+      'closedDone' => '🔒 تیکت بسته شد و به مشتری خبر دادیم.',
+      'alreadyClosed' => 'این تیکت از قبل بسته بود.',
+      'notYours' => '⛔️ فقط ادمین یا پشتیبانِ همین بخش می‌تونه به این تیکت جواب بده.',
+      'answerPrompt' => "📌 جوابت رو بفرست.\n\n<blockquote>متن، عکس، ویدیو، فایل یا ویس قبوله؛ کپشن عکس هم برای مشتری فرستاده می‌شه.</blockquote>",
+      'attachCaption' => '📎 پیوست تیکت {id}',
+      'attachFailed' => '⚠️ پیوست این پیام فرستاده نشد (شاید فایلش دیگه در دسترس نیست).',
+      'closedByUser' => '🔒 کاربر {user} تیکت {id} رو بست.',
+      'rowLabel' => '📨 تیکت‌های من (تاریخچهٔ پشتیبانی)',
+      'info' => 'روشن: توی «☎️ پشتیبانی» دکمهٔ «📨 تیکت‌های من» میاد؛ مشتری تیکت‌هاش، وضعیتشون و گفتگو رو می‌بینه و توی همون تیکت پیام می‌ده. متن‌ها: 🎨 ← ☎️ پشتیبانی',
+    ),
+    // 🔁 تمدید خودکار (autorenew.php) - the admin side
+    'AutoRenew' => 
+    array (
+      'rowLabel' => '🔁 تمدید خودکار از کیف پول',
+      'info' => 'روشن: توی صفحهٔ هر سرویس دکمهٔ «🔁 تمدید خودکار» میاد. اگه مشتری روشنش کنه، کمی قبل از تموم شدن سرویس، با همون محصول از کیف پولش تمدید می‌شه.',
+      'hubCaption' => "🔁 <b>تمدید خودکار از کیف پول</b> — {lang}\n\n<b>این قابلیت چیه؟</b>\nتوی «🛍 سرویس‌های من»، صفحهٔ هر سرویس یه دکمهٔ «🔁 تمدید خودکار» داره. مشتری اگه روشنش کنه، وقتی سرویس داره تموم می‌شه (یا حجمش تموم شد)، ربات خودش با همون محصولی که آخرین بار باهاش تمدید/خرید کرده، از کیف پولش تمدید می‌کنه؛ با همون تخفیف و کش‌بکی که تمدید دستی داره.\n\n<blockquote>• پول اول کم می‌شه، بعد پنل تمدید می‌کنه؛ اگه پنل خطا بده، پول برمی‌گرده و توی تاپیک خطا گزارش می‌شه.\n• حجم دلخواه 🧩، اکانت ساعتی ⏱، کانفیگ رایگان 🎁 و اکانت تست خودکار تمدید نمی‌شن.\n• هر تمدید خودکار توی تاپیک «سایر خدمات» گزارش می‌شه و توی 📊 آمار، تمدید حساب می‌شه.</blockquote>\n\nوضعیت این زبان: {state}\nسرویس‌هایی که تمدید خودکارشون روشنه: <b>{count}</b>",
+      'hoursBtn' => '⏳ چند ساعت قبل از پایان تمدید بشه: {hours}',
+      'hoursPrompt' => "⏳ چند ساعت قبل از تموم شدن سرویس تمدید خودکار انجام بشه؟\n\n<blockquote>یه عدد بین ۱ تا ۷۲ بفرست. الان: <b>{hours}</b></blockquote>",
+      'hoursInvalid' => '⛔️ یه عدد بین ۱ تا ۷۲ بفرست.',
+      'cancel' => '❌ انصراف',
+      'notifyBtn' => 'خبر دادن به مشتری وقتی موجودی کافی نیست (روزی یک بار)',
+      'textsBtn' => '🎨 متن‌ها و دکمه‌ها (🔁 تمدید خودکار)',
+      'back' => '🔙 بازگشت',
+      'report' => "🔁 <b>تمدید خودکار از کیف پول</b>\n\n▫️آیدی عددی کاربر: <code>{id}</code>\n▫️نام کاربری کاربر: @{username}\n▫️نام کاربری کانفیگ: {service}\n▫️موقعیت سرویس: {panel}\n▫️نام محصول: {product}\n▫️مبلغ تمدید: {price}\n▫️موجودی قبل: {before}\n▫️موجودی بعد: {after}\n▫️زمان: {time}",
+      'reportFail' => "❌ <b>تمدید خودکار انجام نشد</b> (پول به کیف پول برگشت)\n\n▫️آیدی عددی کاربر: <code>{id}</code>\n▫️نام کاربری کانفیگ: {service}\n▫️پنل: {panel}\n▫️جواب پنل: <code>{error}</code>",
+    ),
+    // 💌 پیام برگشت مشتری (winback.php) - the admin side
+    'WinBack' => 
+    array (
+      'rowLabel' => '💌 پیام برگشت مشتری (با کد تخفیف)',
+      'info' => 'روشن: چند روز بعد از تموم شدن سرویسی که تمدید نشده، برای مشتری یه پیام با تخفیف مخصوص خودش (روی خرید یا تمدید بعدی، تا چند روز) فرستاده می‌شه.',
+      'hubCaption' => "💌 <b>پیام برگشت مشتری</b> — {lang}\n\n<b>این قابلیت چیه؟</b>\nمشتری‌ای که سرویسش تموم شده و برنگشته، <b>{days} روز</b> بعد یه پیام می‌گیره: «دلمون برات تنگ شده»، با <b>{percent}٪ تخفیف</b> روی خرید یا تمدید بعدیش که تا <b>{valid} روز</b> اعتبار داره.\n\n<blockquote>• تخفیف همون «٪ تخفیف» شخصی کاربره (👤 مدیریت کاربر)؛ خودکار روی فاکتور حساب می‌شه و کدی لازم نیست. بعد از اولین خرید یا تمدید، یا وقتی روزهاش تموم شد، برمی‌گرده به قبل. کسی که خودش تخفیف بیشتری داره، همون رو نگه می‌داره.\n• فقط برای مشتری‌ای که سرویس فعال دیگه‌ای نداره، هر نفر حداکثر ماهی یک بار.\n• روشن کردنش به مشتری‌هایی که خیلی وقت پیش رفتن پیام نمی‌ده: فقط سرویس‌هایی که از حالا تموم می‌شن (حداکثر یک هفته عقب‌تر).\n• هر برگشت توی تاپیک «سایر خدمات» گزارش می‌شه.</blockquote>\n\nوضعیت این زبان: {state}\n📤 فرستاده‌شده: <b>{sent}</b> (۳۰ روز اخیر: {sent30})\n🔙 برگشتن و خرید کردن: <b>{used}</b> (۳۰ روز اخیر: {used30})",
+      'daysBtn' => '⏳ چند روز بعد از تموم شدن: {n}',
+      'percentBtn' => '🎁 درصد تخفیف: {n}٪',
+      'validBtn' => '📅 اعتبار تخفیف: {n} روز',
+      'ask_days' => '⏳ چند روز بعد از تموم شدن سرویس، پیام برگشت فرستاده بشه؟ (عدد ۱ تا ۶۰)',
+      'ask_percent' => '🎁 چند درصد تخفیف بده؟ (عدد ۱ تا ۹۰)',
+      'ask_valid' => '📅 تخفیف چند روز اعتبار داشته باشه؟ (عدد ۱ تا ۶۰)',
+      'now' => 'الان: <b>{n}</b>',
+      'invalid' => '⛔️ یه عدد بین {lo} تا {hi} بفرست.',
+      'cancel' => '❌ انصراف',
+      'textsBtn' => '🎨 متن پیام و دکمه (💌 برگشت مشتری)',
+      'back' => '🔙 بازگشت',
+      'reportUsed' => "💌 <b>مشتری با پیام برگشت، برگشت!</b>\n\n▫️آیدی عددی کاربر: <code>{id}</code>\n▫️نام کاربری: @{username}\n▫️تخفیف: {percent}٪\n▫️{days} روز بعد از پیام خرید یا تمدید کرد.",
+    ),
+    // 💸 انتقال موجودی (wtransfer.php) - the admin side
+    'WalletTransfer' => 
+    array (
+      'rowLabel' => '💸 انتقال موجودی بین کاربرها',
+      'info' => 'روشن: توی «👤 حساب کاربری» دکمهٔ «💸 انتقال موجودی» میاد؛ مشتری با آیدی عددی، بخشی از موجودی‌ش رو به کاربر دیگه‌ای با همون ارز می‌فرسته.',
+      'hubCaption' => "💸 <b>انتقال موجودی بین کاربرها</b> — {lang}\n\n<b>این قابلیت چیه؟</b>\nتوی «👤 حساب کاربری» دکمهٔ «💸 انتقال موجودی» میاد. مشتری آیدی عددی گیرنده رو می‌فرسته، مبلغ رو می‌نویسه و تایید می‌کنه؛ همون لحظه از کیف پول خودش کم و به کیف پول گیرنده اضافه می‌شه و به هر دو خبر داده می‌شه.\n\n<blockquote>• فقط بین کیف پول‌های هم‌ارز (تومان به تومان، دلار به دلار).\n• فقط از موجودی واقعی؛ اعتبار نماینده منتقل نمی‌شه.\n• هر انتقال توی تاپیک «پرداخت‌ها» گزارش می‌شه، با دکمهٔ مدیریت هر دو کاربر.</blockquote>\n\nوضعیت این زبان: {state}",
+      'minBtn' => '⬇️ کمترین مبلغ هر انتقال: {n}',
+      'maxBtn' => '⬆️ بیشترین مبلغ هر انتقال: {n}',
+      'noLimit' => 'بدون سقف',
+      'ask_min' => '⬇️ کمترین مبلغی که می‌شه منتقل کرد رو بفرست (به ارز همین زبان).',
+      'ask_max' => '⬆️ بیشترین مبلغ یک انتقال رو بفرست (به ارز همین زبان). <code>0</code> یعنی بدون سقف.',
+      'invalid' => '⛔️ یه عدد درست بفرست.',
+      'cancel' => '❌ انصراف',
+      'textsBtn' => '🎨 متن‌ها و دکمه‌ها (👤 حساب کاربری ← 💸 انتقال موجودی)',
+      'back' => '🔙 بازگشت',
+      'report' => "💸 <b>انتقال موجودی بین کاربرها</b>\n\n▫️از: <code>{from}</code> @{fromu}\n▫️به: <code>{to}</code> @{tou}\n▫️مبلغ: {amount}\n▫️موجودی فرستنده بعد از انتقال: {fromafter}\n▫️موجودی گیرنده بعد از انتقال: {toafter}\n▫️زمان: {time}",
+      'fromBtn' => '👤 فرستنده',
+      'toBtn' => '👤 گیرنده',
+    ),
     // 💳 پرداخت مستقیم (directpay.php) - the admin side, in Persian only
     'DirectPay' => 
     array (
@@ -11151,6 +11373,41 @@ nowpayments.io
     'looksGroupsHint' => 'درگاه‌های هم‌خانواده در صفحه‌ی «روش پرداخت» زیر یک دکمه جمع می‌شوند؛ خانواده‌ای که یک درگاه دارد جمع نمی‌شود',
     'looksHint' => 'ایموجی پریمیوم و استیکر از داخل ربات گذاشته می‌شوند؛ اینجا فقط می‌مانند یا برداشته می‌شوند.',
     'looksNameTooLong' => 'اسم سفارشی حداکثر ۱۵۰ حرف است.',
+    // 📨 تیکت‌ها (panel/tickets.php)
+    'tkPageTitle' => 'تیکت‌ها',
+    'tkPageLede' => 'پیام‌های مشتری‌ها به پشتیبانی، هر گفتگو با وضعیتش؛ جواب و بستن از همین‌جا، مثل ربات',
+    'tkListTitle' => 'تیکت‌ها',
+    'tkOpenCount' => '%s تیکت در انتظار پاسخ',
+    'tkAllStates' => 'همهٔ وضعیت‌ها',
+    'tkStateOpen' => 'در انتظار پاسخ',
+    'tkStateAnswered' => 'پاسخ داده شد',
+    'tkStateClosed' => 'بسته شد',
+    'tkSearchPlaceholder' => 'آیدی کاربر یا شمارهٔ تیکت',
+    'tkColTicket' => 'تیکت',
+    'tkColUser' => 'کاربر',
+    'tkColDept' => 'بخش',
+    'tkColMessages' => 'پیام‌ها',
+    'tkColState' => 'وضعیت',
+    'tkColLast' => 'آخرین پیام',
+    'tkEmpty' => 'هنوز تیکتی نیست.',
+    'tkDbError' => 'خطا در خواندن تیکت‌ها: ',
+    'tkNotFound' => 'این تیکت پیدا نشد.',
+    'tkBackToList' => 'برگشت به لیست',
+    'tkFromUser' => 'مشتری',
+    'tkFromSupport' => 'پشتیبانی',
+    'tkMediaPhoto' => 'عکس',
+    'tkMediaVideo' => 'ویدیو',
+    'tkMediaFile' => 'فایل',
+    'tkMediaVoice' => 'صدا',
+    'tkAnswerTitle' => 'جواب به این تیکت',
+    'tkAnswerSub' => 'به زبان و با دکمه‌های خود مشتری فرستاده می‌شه، مثل جوابی که از ربات می‌دی. عکس و فایل رو از ربات بفرست.',
+    'tkAnswerPlaceholder' => 'جوابت رو بنویس…',
+    'tkAnswerBtn' => 'فرستادن جواب',
+    'tkAnswerInvalid' => 'جواب خالیه یا از ۳۵۰۰ حرف بیشتره.',
+    'tkAnswerSent' => 'جواب برای مشتری فرستاده شد.',
+    'tkAnswerFailed' => 'جواب ذخیره شد ولی تلگرام پیام رو تحویل نگرفت (شاید مشتری ربات رو بلاک کرده).',
+    'tkCloseBtn' => 'بستن تیکت',
+    'tkClosedOk' => 'تیکت بسته شد و به مشتری خبر دادیم.',
     'featDpayTitle' => 'پرداخت مستقیم',
     'featDpaySub' => 'دکمهٔ «پرداخت مستقیم» کنار «تایید و پرداخت از کیف پول» برای مشتری‌های %s؛ خاموش شروع می‌شود',
     'featDpayPaths' => 'مسیرها',

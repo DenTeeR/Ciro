@@ -693,6 +693,19 @@ if (function_exists('sf_dispatch') && sf_dispatch()) {
 if (function_exists('dpay_dispatch') && ($dp_res = dpay_dispatch()) !== false) {
     $datain = $dp_res;
 }
+// 📨 تیکت‌های من (tickets.php): the customer's ticket list and conversations,
+// and the supporter's «🔒 بستن تیکت» (a supporter need not be an admin)
+if (function_exists('tk_dispatch') && (tk_dispatch() || tk_admin_dispatch())) {
+    return;
+}
+// 🔁 تمدید خودکار (autorenew.php): the button on a service's page
+if (function_exists('ar_dispatch') && ar_dispatch()) {
+    return;
+}
+// 💸 انتقال موجودی (wtransfer.php): its taps and what is typed into it
+if (function_exists('wt_dispatch') && wt_dispatch()) {
+    return;
+}
 if ($text == "/start" || $datain == "start" || $text == "start") {
     update("user", "Processing_value", "0", "id", $from_id);
     update("user", "Processing_value_one", "0", "id", $from_id);
@@ -1568,6 +1581,10 @@ if ($text == "/start" || $datain == "start" || $text == "start") {
         // the buttons are built by svc_action_rows() - the purchase message's
         // config carries the same set, with customizations of its own
         $keyboardsetting = ['inline_keyboard' => svc_action_rows('mine', $nameloc, $marzban, $DataUserOut['status'], (string) ($DataUserOut['subscription_url'] ?? ''), $user, $textbotlang)];
+        // 🔁 تمدید خودکار (autorenew.php), where this language has it on
+        if (function_exists('ar_service_row') && ($ar_row = ar_service_row($nameloc, $marzban, $user)) !== null) {
+            $keyboardsetting['inline_keyboard'][] = $ar_row;
+        }
         $keyboardsetting['inline_keyboard'][] = [['text' => $textbotlang['users']['status']['backlist'], 'callback_data' => 'backorder', 'style' => 'danger']];
         $keyboardsetting = json_encode($keyboardsetting);
         if ($DataUserOut['sub_updated_at'] !== null) {
@@ -4128,10 +4145,12 @@ if ($user['step'] == "createusertest" || preg_match('/locationtest_(.*)/', $data
         sendmessage($from_id, $textbotlang['users']['buttonDisabled'], null, 'HTML');
         return;
     }
+    // 📨 تیکت‌های من (tickets.php), when this language has it on
+    $tk_supportoption = function_exists('tk_support_keyboard') ? tk_support_keyboard($supportoption, $user['lang'] ?? 'fa') : $supportoption;
     if ($datain == "supportbtns") {
-        Editmessagetext($from_id, $message_id, $textbotlang['users']['support']['btnsupport'], $supportoption);
+        Editmessagetext($from_id, $message_id, $textbotlang['users']['support']['btnsupport'], $tk_supportoption);
     } else {
-        sendmessage($from_id, $textbotlang['users']['support']['btnsupport'], $supportoption, 'HTML');
+        sendmessage($from_id, $textbotlang['users']['support']['btnsupport'], $tk_supportoption, 'HTML');
     }
 } elseif ($datain == "support") {
     Editmessagetext($from_id, $message_id, $textbotlang['users']['support']['selectDepartment'], $list_departman, 'HTML');
@@ -4141,109 +4160,81 @@ if ($user['step'] == "createusertest" || preg_match('/locationtest_(.*)/', $data
     deletemessage($from_id, $message_id);
     sendmessage($from_id, $textbotlang['users']['support']['sendMessage'], $backuser, 'HTML');
     step("gettextticket", $from_id);
-} elseif ($user['step'] == "gettextticket" && $text) {
+} elseif ($user['step'] == "gettextticket" && $datain == '' && tk_update_has_content()) {
+    // a photo, video, file or voice reaches support too, with its caption -
+    // this step used to take text only, so a screenshot was never delivered
     $userdata = json_decode($user['Processing_value'], true);
-    $departeman = select("departman", "*", "id", $userdata['iddeparteman'], "select");
-    $time = date('Y/m/d H:i:s');
+    $departeman = select("departman", "*", "id", $userdata['iddeparteman'] ?? 0, "select");
+    if (!is_array($departeman)) {
+        step("home", $from_id);
+        sendmessage($from_id, $textbotlang['users']['support']['selectDepartment'], $list_departman, 'HTML');
+        return;
+    }
+    $tk_text = tk_text_from_update();
+    $tk_media = tk_media_from_update();
     $timejalali = jdate('Y/m/d H:i:s');
-    $randomString = bin2hex(random_bytes(4));
-    $stmt = $pdo->prepare("INSERT IGNORE INTO support_message (Tracking,idsupport,iduser,name_departman,text,time,status) VALUES (:Tracking,:idsupport,:iduser,:name_departman,:text,:time,:status)");
-    $status = "Unseen";
-    $stmt->bindParam(':Tracking', $randomString);
-    $stmt->bindParam(':idsupport', $departeman['idsupport']);
-    $stmt->bindParam(':iduser', $from_id);
-    $stmt->bindParam(':name_departman', $departeman['name_departman']);
-    $stmt->bindParam(':text', $text, PDO::PARAM_STR);
-    $stmt->bindParam(':time', $time);
-    $stmt->bindParam(':status', $status);
-    $stmt->execute();
-    if ($photo) {
-        sendphoto($departeman['idsupport'], $photoid, null);
-    }
-    if ($video) {
-        sendvideo($departeman['idsupport'], $videoid, null);
-    }
-    $textsuppoer = sprintf($textbotlang['Admin']['reportgroup']['supportMessage'], $from_id, $from_id, $timejalali, $username, $departeman['name_departman'], $text, $caption);
-    $Response = json_encode([
-        'inline_keyboard' => [
-            [
-                ['text' => $textbotlang['users']['support']['answermessage'], 'callback_data' => 'Responsesupport_' . $randomString],
-            ],
-        ]
-    ]);
-    sendmessage($departeman['idsupport'], $textsuppoer, $Response, 'HTML');
+    $randomString = tk_insert($departeman['idsupport'], $from_id, $departeman['name_departman'], $tk_text, $tk_media, 'Unseen');
+    // the customer's words are text, not markup: a «<» no longer stops the report
+    $textsuppoer = sprintf($textbotlang['Admin']['reportgroup']['supportMessage'], $from_id, $from_id, $timejalali, $username, htmlspecialchars($departeman['name_departman']), htmlspecialchars($tk_text), '');
+    tk_notify_support($departeman['idsupport'], $textsuppoer, $tk_media, $randomString, $randomString);
     sendmessage($from_id, $textbotlang['users']['support']['sentForReview'], $keyboard, 'HTML');
     step("home", $from_id);
-    step("home", $departeman['idsupport']);
-} elseif (preg_match('/Responsesupport_(\w+)/', $datain, $dataget)) {
+    if ((string) $departeman['idsupport'] !== (string) $from_id) {
+        step("home", $departeman['idsupport']);
+    }
+} elseif (preg_match('/^Responsesupport_(\w+)/', $datain, $dataget)) {
     $idtraking = $dataget[1];
-    $trakingdetail = select("support_message", "*", "Tracking", $idtraking);
+    $trakingdetail = tk_row($idtraking);
+    // only an admin or the department's own supporter answers a ticket
+    if ($trakingdetail === null || !tk_can_answer($from_id, $trakingdetail)) {
+        telegram('answerCallbackQuery', ['callback_query_id' => $callback_query_id, 'text' => panel_texts()['Admin']['Tickets']['notYours'], 'show_alert' => true]);
+        return;
+    }
     if ($trakingdetail['status'] == "Answered") {
         sendmessage($from_id, $textbotlang['Admin']['messageBulk']['answeredByOther'], null, 'HTML');
         return;
     }
-    sendmessage($from_id, $textbotlang['users']['support']['sendMessageText'], $backuser, 'HTML');
+    sendmessage($from_id, panel_texts()['Admin']['Tickets']['answerPrompt'], $backuser, 'HTML');
     update("user", "Processing_value", $idtraking, "id", $from_id);
     step("getextsupport", $from_id);
-} elseif ($user['step'] == "getextsupport") {
-    $trakingdetail = select("support_message", "*", "Tracking", $user['Processing_value']);
-    $time = date('Y/m/d H:i:s');
-    update("support_message", "status", "Answered", "Tracking", $user['Processing_value']);
-    update("support_message", "result", $text, "Tracking", $user['Processing_value']);
-    // in the words, and with the reply button, of the customer it goes to
-    $sa_texts = payer_texts($trakingdetail['iduser']);
-    $sa_row = select("user", "*", "id", $trakingdetail['iduser'], "select");
-    $sa_lang = in_array($sa_row['lang'] ?? '', panel_langs(), true) ? $sa_row['lang'] : 'fa';
-    $textSendAdminToUser = sprintf($sa_texts['users']['support']['messageFromAdmin'], $text);
-    $Response = json_encode([
-        'inline_keyboard' => [
-            [
-                genbtn_render(genbtn_defs('ma', $sa_texts)[0], genbtn_override($sa_lang, 'users.support.messageFromAdminAlt', 0), genbtn_tap_cb('ma', 'Responsesusera_' . $trakingdetail['Tracking'])),
-            ],
-        ]
-    ]);
-    bottext_extras_key_hint('users.support.messageFromAdmin');
-    sendmessage($trakingdetail['iduser'], $textSendAdminToUser, $Response, 'HTML');
+} elseif ($user['step'] == "getextsupport" && $datain == '' && tk_update_has_content()) {
+    $trakingdetail = tk_row($user['Processing_value']);
+    if ($trakingdetail === null || !tk_can_answer($from_id, $trakingdetail)) {
+        step("home", $from_id);
+        return;
+    }
+    // the answer as the supporter wrote it (bold, links ... kept), a «<» in it no
+    // longer making Telegram refuse the whole message; a photo or video goes too
+    $tk_media = tk_media_from_update();
+    tk_answer($trakingdetail['Tracking'], tk_text_from_update(), $tk_media);
+    tk_send_answer($trakingdetail, tk_html_from_update(), $tk_media);
     sendmessage($from_id, $textbotlang['users']['support']['sentSuccess'], null, 'HTML');
     step("home", $from_id);
-} elseif (preg_match('/Responsesusera_(\w+)/', $datain, $dataget)) {
+} elseif (preg_match('/^Responsesusera_(\w+)/', $datain, $dataget)) {
     $idtraking = $dataget[1];
+    $tk_row = tk_row($idtraking);
+    if ($tk_row === null || (string) $tk_row['iduser'] !== (string) $from_id) {
+        telegram('answerCallbackQuery', ['callback_query_id' => $callback_query_id, 'text' => $textbotlang['users']['support']['tkGone'], 'show_alert' => true]);
+        return;
+    }
     sendmessage($from_id, $textbotlang['users']['support']['sendMessageText'], $backuser, 'HTML');
     update("user", "Processing_value", $idtraking, "id", $from_id);
     step("getextuserfors", $from_id);
-} elseif ($user['step'] == "getextuserfors") {
-    $trakingdetail = select("support_message", "*", "Tracking", $user['Processing_value']);
+} elseif ($user['step'] == "getextuserfors" && $datain == '' && tk_update_has_content()) {
+    $trakingdetail = tk_row($user['Processing_value']);
     step("home", $from_id);
-    $time = date('Y/m/d H:i:s');
+    if ($trakingdetail === null || (string) $trakingdetail['iduser'] !== (string) $from_id) {
+        return;
+    }
     $timejalali = jdate('Y/m/d H:i:s');
-    Editmessagetext($from_id, $message_id, $text_inline, json_encode(['inline_keyboard' => []]));
-    $randomString = bin2hex(random_bytes(4));
-    $stmt = $pdo->prepare("INSERT IGNORE INTO support_message (Tracking,idsupport,iduser,name_departman,text,time,status) VALUES (:Tracking,:idsupport,:iduser,:name_departman,:text,:time,:status)");
-    $status = "Customerresponse";
-    $stmt->bindParam(':Tracking', $randomString);
-    $stmt->bindParam(':idsupport', $trakingdetail['idsupport']);
-    $stmt->bindParam(':iduser', $trakingdetail['iduser']);
-    $stmt->bindParam(':name_departman', $trakingdetail['name_departman']);
-    $stmt->bindParam(':text', $text, PDO::PARAM_STR);
-    $stmt->bindParam(':time', $time);
-    $stmt->bindParam(':status', $status);
-    $stmt->execute();
-    $textsuppoer = sprintf($textbotlang['Admin']['reportgroup']['supportMessage2'], $from_id, $from_id, $timejalali, $username, $trakingdetail['name_departman'], $text);
-    $Response = json_encode([
-        'inline_keyboard' => [
-            [
-                ['text' => $textbotlang['users']['support']['answermessage'], 'callback_data' => 'Responsesupport_' . $randomString],
-            ],
-        ]
-    ]);
-    if ($photo) {
-        sendphoto($trakingdetail['idsupport'], $photoid, null);
-    }
-    if ($video) {
-        sendvideo($trakingdetail['idsupport'], $videoid, null);
-    }
-    sendmessage($trakingdetail['idsupport'], $textsuppoer, $Response, 'HTML');
-    sendmessage($from_id, $textbotlang['users']['support']['sentForRequestReview'], null, 'HTML');
+    $tk_text = tk_text_from_update();
+    $tk_media = tk_media_from_update();
+    // the same ticket: it keeps its first message's Tracking as its thread
+    $tk_thread = tk_thread_of($trakingdetail);
+    $randomString = tk_insert($trakingdetail['idsupport'], $trakingdetail['iduser'], $trakingdetail['name_departman'], $tk_text, $tk_media, 'Customerresponse', $tk_thread);
+    $textsuppoer = sprintf($textbotlang['Admin']['reportgroup']['supportMessage2'], $from_id, $from_id, $timejalali, $username, htmlspecialchars($trakingdetail['name_departman']), htmlspecialchars($tk_text));
+    tk_notify_support($trakingdetail['idsupport'], $textsuppoer, $tk_media, $randomString, $tk_thread);
+    sendmessage($from_id, $textbotlang['users']['support']['sentForRequestReview'], $keyboard, 'HTML');
 } elseif ($datain == "fqQuestions") {
     sendmessage($from_id, $textbotlang['textbot']['faqDesc'], null, 'HTML');
 } elseif ($text == $textbotlang['textbot']['accountWallet'] || $datain == "account" || $text == "/wallet") {

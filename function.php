@@ -10484,6 +10484,8 @@ function bot_cron_commands()
         "*/2 * * * * flock -n /tmp/mz_rbnodes.lock curl -s --max-time 110 https://$domainhosts/cronbot/rbnodes.php > /dev/null 2>&1",
         "14,29,44,59 * * * * flock -n /tmp/mz_uptime_panel.lock curl -s --max-time 600 https://$domainhosts/cronbot/uptime_panel.php > /dev/null 2>&1",
         "9,39 * * * * flock -n /tmp/mz_expireagent.lock curl -s --max-time 1700 https://$domainhosts/cronbot/expireagent.php > /dev/null 2>&1",
+        // 💌 پیام برگشت مشتری: database only, and nothing to do while it is off
+        "*/10 * * * * flock -n /tmp/mz_winback.lock curl -s --max-time 280 https://$domainhosts/cronbot/winback.php > /dev/null 2>&1",
     ];
     // One server can run several bots, each with these same jobs: every bot
     // gets locks of its own, or one bot's long run would make the other's
@@ -14264,6 +14266,10 @@ if (!function_exists('bt_section_meta')) {
                 'alert' => 'این بخش ابزارهای جانبی (ظاهر دکمه‌های منوی اصلی، تنظیمات تغییر زبان) رو مدیریت می‌کنه - نه متن پیام‌ها رو.',
             ],
         ];
+        // the newer features' sections (extras.php)
+        if (function_exists('xf_section_meta')) {
+            $meta += xf_section_meta();
+        }
         if ($section === null) {
             return $meta;
         }
@@ -14280,7 +14286,7 @@ if (!function_exists('genbtn_alias_map')) {
     // one shared override avoids three copies of the same edit.
     function genbtn_alias_map()
     {
-        return [
+        return array_merge([
             'su' => 'users.sell.selectUsernamePrompt',
             // the test account's own 🔴 / 🟢 pair under «🔑 تنظیم اکانت تست»,
             // apart from the purchase's 'su' (own-key: its caption owns them)
@@ -14386,7 +14392,7 @@ if (!function_exists('genbtn_alias_map')) {
             'kt' => 'users.subapps.listBuy',
             'kr' => 'users.subapps.listBuy',
             'kh' => 'users.subapps.listBuy',
-        ];
+        ], function_exists('xf_genbtn_aliases') ? xf_genbtn_aliases() : []);
     }
 }
 if (!function_exists('genbtn_alias_to_key')) {
@@ -14414,6 +14420,10 @@ if (!function_exists('genbtn_alias_to_key')) {
     // (cf, rn, cl and su's cancel) stay out - hiding one strands the customer.
     function genbtn_hideable($alias, $idx)
     {
+        // a back button of the newer features (extras.php) is never hidden
+        if (function_exists('xf_genbtn_nohide') && xf_genbtn_nohide($alias)) {
+            return false;
+        }
         // their render sites (keyboard.php) never read 'hidden', and hiding
         // «پذیرش قوانین» would strand a customer on the rules screen
         // ⏱'s row is the only way into an hourly service: never hidden
@@ -14451,6 +14461,10 @@ if (!function_exists('genbtn_defs')) {
     // caller of genbtn_render() instead, and 'none' here is only for previews]
     function genbtn_defs($alias, $textbotlang)
     {
+        // the buttons of the newer features (extras.php)
+        if (function_exists('xf_genbtn_defs') && ($xf_defs = xf_genbtn_defs($alias, $textbotlang)) !== null) {
+            return $xf_defs;
+        }
         if ($alias === 'su' || $alias === 'uu') {
             return [
                 0 => ['name' => '🔴 دکمه انصراف', 'text' => $textbotlang['keyboard']['cancelUsernameBtn'], 'style' => 'danger', 'callback_data' => 'ucancel'],
@@ -20740,7 +20754,7 @@ if (!function_exists('bt_button')) {
     // the registry items that are button labels rather than messages
     function bt_btnitem_keys()
     {
-        return [
+        return array_merge([
             'users.sell.backToPreviousBtn',
             'users.sell.backToPanelListBtn',
             'users.sell.backToPanelSelectBtn',
@@ -20771,7 +20785,7 @@ if (!function_exists('bt_button')) {
             // 🌐 + 📲 - one pair for every service screen and delivery
             // message (genbtn gb)
             'users.subapps.entryBuy',
-        ];
+        ], function_exists('xf_btnitem_keys') ? xf_btnitem_keys() : []);
     }
     // label-only override, for buttons that may render on a reply keyboard
     function bt_reply_label($lang, $key, $default)
@@ -20816,6 +20830,9 @@ if (!function_exists('bt_button')) {
             'users.payg.listLabel' => 'paygsvc',
             'users.subapps.entryBuy' => 'subapps',
         ];
+        if (function_exists('xf_btnitem_groups')) {
+            $groups += xf_btnitem_groups();
+        }
         $group = $groups[$key] ?? '';
         return $group !== '' ? "bt_group|{$lang}|{$group}" : "btact|back|{$lang}";
     }
@@ -24444,3 +24461,13 @@ require_once __DIR__ . '/rbsvc.php';
 require_once __DIR__ . '/shortfall.php';
 // 💳 پرداخت مستقیم - the same
 require_once __DIR__ . '/directpay.php';
+// the newer features' shared registry: their buttons in 🎨 and their switches
+require_once __DIR__ . '/extras.php';
+// 📨 تیکت‌های پشتیبانی - the same
+require_once __DIR__ . '/tickets.php';
+// 🔁 تمدید خودکار از کیف پول - the same
+require_once __DIR__ . '/autorenew.php';
+// 💌 پیام برگشت مشتری - the same
+require_once __DIR__ . '/winback.php';
+// 💸 انتقال موجودی بین کاربرها - the same
+require_once __DIR__ . '/wtransfer.php';

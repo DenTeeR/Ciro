@@ -37,6 +37,7 @@ array_push(
   $manageItems,
   $navItem('features.php', 'features', $navT['featPageTitle'], 'toggle-right', $navT['featPageTitle']),
   $navItem('referral.php', 'referral', $navT['refPageTitle'], 'user-plus', $navT['refPageTitle']),
+  $navItem('tickets.php', 'tickets', $navT['tkPageTitle'], 'ticket', $navT['tkPageTitle']),
   $navItem('payment.php', 'payment', $navT['layoutPageTitlePayment'], 'card', $navT['layoutSearchBoxPlaceholder']),
   $navItem('channels.php', 'channels', $navT['chnPageTitle'], 'megaphone', $navT['chnPageTitle']),
   $navItem('help.php', 'help', $navT['helpPageTitle'], 'book-open', $navT['helpPageTitle']),

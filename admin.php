@@ -5570,6 +5570,12 @@ if (!function_exists('feature_status_lang_payload')) {
             ['text' => $scorestatus_v == '1' ? $on : $off, 'callback_data' => $tog('score', $scorestatus_v)],
             ['text' => $tx['keyboard']['nightLottery'], 'callback_data' => "none"],
         ];
+        // 📨 تیکت‌ها، 🔁 تمدید خودکار، 💌 برگشت مشتری، 💸 انتقال موجودی (extras.php)
+        if (function_exists('xf_rows')) {
+            foreach (xf_rows($lang) as $xf_row) {
+                $rows[] = $xf_row;
+            }
+        }
         return json_encode(['inline_keyboard' => $rows]);
     }
 }
@@ -8020,6 +8026,16 @@ if (function_exists('rbsvc_admin_dispatch') && rbsvc_admin_dispatch()) {
 // directpay.php: 💳 پرداخت مستقیم - its switch in 🛒 وضعیت قابلیت‌های فروشگاه and its settings hub
 if (function_exists('dpay_admin_dispatch') && dpay_admin_dispatch()) {
     return;
+}
+// extras.php: the newer features' switches in 🌐 وضعیت قابلیت‌ها (هر زبان), and
+// the settings hubs of 🔁 تمدید خودکار, 💌 برگشت مشتری and 💸 انتقال موجودی
+if (function_exists('xf_admin_dispatch') && xf_admin_dispatch()) {
+    return;
+}
+foreach (['ar_admin_dispatch', 'wb_admin_dispatch', 'wt_admin_dispatch'] as $xf_fn) {
+    if (function_exists($xf_fn) && $xf_fn()) {
+        return;
+    }
 }
 // backup_import.php: 📥 a backup handed to the bot (🗄 تنظیمات بکاپ) - one
 // message carries the whole import: the prompt, the files as they come in,
