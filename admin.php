@@ -62,6 +62,9 @@ if (!function_exists('webpanel_info')) {
         }
         $rows[] = [['text' => $w['changePassBtn'], 'callback_data' => 'webpanel_pass', 'style' => 'danger']];
         $rows[] = [['text' => sprintf($w['toggleBtn'], $on ? $w['stateOn'] : $w['stateOff']), 'callback_data' => 'webpanel_toggle', 'style' => $on ? 'success' : 'danger']];
+        // 🔐 a code from this bot at every login (webauth.php), off until turned on
+        $tfa = function_exists('web2fa_on') && web2fa_on();
+        $rows[] = [['text' => sprintf($w['twoFaBtn'], $tfa ? $w['stateOn'] : $w['stateOff']), 'callback_data' => 'webpanel_2fa', 'style' => $tfa ? 'success' : 'danger']];
         return [$text, json_encode(['inline_keyboard' => $rows])];
     }
 }
@@ -82,6 +85,21 @@ if ($datain === 'webpanel_toggle' && $adminrulecheck['rule'] == "administrator")
     [$wp_text, $wp_kb] = webpanel_info($from_id, $wp_shown, $wp_title, $textbotlang);
     Editmessagetext($from_id, $message_id, $wp_text, $wp_kb, 'HTML');
     telegram('answerCallbackQuery', ['callback_query_id' => $callback_query_id, 'text' => trim($wp_title)]);
+    return;
+}
+if ($datain === 'webpanel_2fa' && $adminrulecheck['rule'] == "administrator" && function_exists('web2fa_set')) {
+    web2fa_set(!web2fa_on());
+    $wp_shown = null;
+    if (preg_match('/🔑[^:\n]*:\s*(\S+)\s*$/mu', (string) $text_inline, $wp_m)) {
+        $wp_admin = select("admin", "*", "id_admin", $from_id, "select");
+        if (is_array($wp_admin) && password_verify($wp_m[1], (string) $wp_admin['password'])) {
+            $wp_shown = $wp_m[1];
+        }
+    }
+    $wp_title = $textbotlang['Admin']['webpanel'][web2fa_on() ? 'twoFaOn' : 'twoFaOff'];
+    [$wp_text, $wp_kb] = webpanel_info($from_id, $wp_shown, $textbotlang['Admin']['webpanel']['activeNow'], $textbotlang);
+    Editmessagetext($from_id, $message_id, $wp_text, $wp_kb, 'HTML');
+    telegram('answerCallbackQuery', ['callback_query_id' => $callback_query_id, 'text' => $wp_title, 'show_alert' => true]);
     return;
 }
 if ($datain === 'webpanel_pass' && $adminrulecheck['rule'] == "administrator") {

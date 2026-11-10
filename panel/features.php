@@ -106,6 +106,40 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($posted('dpay_gift') !== $now['gift']) {
             dpay_toggle($lang, 'gift');
         }
+    } elseif ($card === 'extras') {
+        // 📨 🔁 💌 💸 (extras.php): checked first, written after - a bad number leaves all as it was
+        $num = function ($k, $lo, $hi) use (&$err, $t) {
+            $raw = trim((string) ($_POST[$k] ?? ''));
+            if (!ctype_digit($raw) || (int) $raw < $lo || (int) $raw > $hi) {
+                $err = sprintf($t['featXfRange'], $lo, $hi);
+                return null;
+            }
+            return (string) (int) $raw;
+        };
+        $vals = [
+            'ar_hours' => $num('ar_hours', 1, 72),
+            'wb_days' => $num('wb_days', 1, 60),
+            'wb_percent' => $num('wb_percent', 1, 90),
+            'wb_valid' => $num('wb_valid', 1, 60),
+        ];
+        $wtMin = money_normalize($_POST['wt_min'] ?? '');
+        $wtMax = money_normalize(($_POST['wt_max'] ?? '') === '' ? '0' : $_POST['wt_max']);
+        if ($wtMin === null || (float) $wtMin <= 0 || $wtMax === null) {
+            $err = $t['featXfMoney'];
+        }
+        if ($err === null) {
+            foreach (['tk_on', 'ar_on', 'ar_notify', 'wb_on', 'wt_on'] as $k) {
+                $now = (string) feature_setting_value($k, $lang, $k === 'ar_notify' ? '1' : '0') === '1';
+                if ($posted($k) !== $now) {
+                    feature_setting_set($k, $lang, $posted($k) ? '1' : '0');
+                }
+            }
+            foreach ($vals as $k => $val) {
+                feature_setting_set($k, $lang, $val);
+            }
+            feature_setting_set('wt_min', $lang, (string) (float) $wtMin);
+            feature_setting_set('wt_max', $lang, (string) (float) $wtMax);
+        }
     } elseif ($card === 'phone') {
         $codes = preg_split('/[\s,،]+/u', trim((string) ($_POST['phone_prefix'] ?? '')), -1, PREG_SPLIT_NO_EMPTY);
         if (($_POST['phone_default'] ?? '') === '1') {
@@ -264,6 +298,26 @@ echo web_lang_assets();
       </div></div>
     <?= $field($t['featDpayLimits'], $chk('dpay_limits', $dp['limits'], $t['refOn']), $t['featDpayLimitsHint']) ?>
     <?= $field($t['featDpayGift'], $chk('dpay_gift', $dp['gift'], $t['refOn']), $t['featDpayGiftHint']) ?>
+  </div>
+  <?= $saveBtn ?></form>
+</div>
+
+<?php $xfAr = ar_cfg($lang); $xfWb = wb_cfg($lang); $xfWt = wt_cfg($lang); ?>
+<div class="card fade-up" id="extras" style="margin-bottom:14px">
+  <?= $cardHead('⟦i:sparkles⟧ ' . $t['featXfTitle'], sprintf($t['featXfSub'], htmlspecialchars($langName))) ?>
+  <?= $formOpen('extras') ?>
+  <div class="card-body">
+    <?= $field($fa['Admin']['Tickets']['rowLabel'], $chk('tk_on', tk_on($lang), $t['refOn']), $fa['Admin']['Tickets']['info']) ?>
+    <?= $field($fa['Admin']['AutoRenew']['rowLabel'], $chk('ar_on', $xfAr['on'], $t['refOn']), $fa['Admin']['AutoRenew']['info']) ?>
+    <?= $field($t['featXfArHours'], $input('ar_hours', $xfAr['hours'], 'inputmode="numeric" dir="ltr"')) ?>
+    <?= $field($fa['Admin']['AutoRenew']['notifyBtn'], $chk('ar_notify', $xfAr['notify'], $t['refOn'])) ?>
+    <?= $field($fa['Admin']['WinBack']['rowLabel'], $chk('wb_on', $xfWb['on'], $t['refOn']), $fa['Admin']['WinBack']['info']) ?>
+    <?= $field($t['featXfWbDays'], $input('wb_days', $xfWb['days'], 'inputmode="numeric" dir="ltr"')) ?>
+    <?= $field($t['featXfWbPercent'], $input('wb_percent', $xfWb['percent'], 'inputmode="numeric" dir="ltr"')) ?>
+    <?= $field($t['featXfWbValid'], $input('wb_valid', $xfWb['valid'], 'inputmode="numeric" dir="ltr"')) ?>
+    <?= $field($fa['Admin']['WalletTransfer']['rowLabel'], $chk('wt_on', $xfWt['on'], $t['refOn']), $fa['Admin']['WalletTransfer']['info']) ?>
+    <?= $field(sprintf($t['featXfWtMin'], htmlspecialchars($curTitle)), $input('wt_min', rtrim(rtrim(number_format($xfWt['min'], 2, '.', ''), '0'), '.'), 'inputmode="decimal" dir="ltr"')) ?>
+    <?= $field(sprintf($t['featXfWtMax'], htmlspecialchars($curTitle)), $input('wt_max', rtrim(rtrim(number_format($xfWt['max'], 2, '.', ''), '0'), '.'), 'inputmode="decimal" dir="ltr"'), $t['featXfWtMaxHint']) ?>
   </div>
   <?= $saveBtn ?></form>
 </div>

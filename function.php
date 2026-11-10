@@ -24471,3 +24471,5 @@ require_once __DIR__ . '/autorenew.php';
 require_once __DIR__ . '/winback.php';
 // 💸 انتقال موجودی بین کاربرها - the same
 require_once __DIR__ . '/wtransfer.php';
+// 🔐 کد تایید تلگرامی برای ورود به پنل وب - the same
+require_once __DIR__ . '/webauth.php';

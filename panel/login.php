@@ -17,7 +17,41 @@ if (!$panelOff && !empty($_SESSION['admin_user'])) {
 }
 
 $error = '';
-if (!$panelOff && $_SERVER['REQUEST_METHOD'] === 'POST') {
+$info = '';
+// 🔐 the login's second step (webauth.php): the code the bot sent to Telegram
+$ip = $_SERVER['REMOTE_ADDR'] ?? '0.0.0.0';
+if (!$panelOff && ($_GET['tfa'] ?? '') === 'cancel') {
+  unset($_SESSION['web2fa']);
+  header('Location: login.php');
+  exit;
+}
+if (!$panelOff && $_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['tfa_code'])) {
+  $tfa = $_SESSION['web2fa'] ?? null;
+  if (!csrf_check_value($_POST['_csrf'] ?? '')) {
+    $error = $textbotlang['panel']['login2faWrong'];
+  } elseif (!check_login_rate($ip)) {
+    $error = $textbotlang['panel']['loginTooManyAttempts'];
+  } else {
+    $res = web2fa_check($_POST['tfa_code'], $ip);
+    if ($res === 'ok' && is_array($tfa)) {
+      unset($_SESSION['web2fa']);
+      clear_login_rate($ip);
+      session_regenerate_id(true);
+      $_SESSION['admin_user'] = $tfa['user'];
+      $_SESSION['login_time'] = time();
+      if (!empty($tfa['remember'])) {
+        remember_issue($tfa['user'], $tfa['stored']);
+      } else {
+        remember_forget();
+      }
+      flash('success', $textbotlang['panel']['loginWelcomeBack'] . $tfa['user']);
+      header('Location: index.php');
+      exit;
+    }
+    $error = $res === 'wrong' ? $textbotlang['panel']['login2faWrong'] : $textbotlang['panel']['login2faExpired'];
+    error_log("Wrong web panel login code from IP: $ip");
+  }
+} elseif (!$panelOff && $_SERVER['REQUEST_METHOD'] === 'POST') {
   $username = trim($_POST['username'] ?? '');
   $password = $_POST['password'] ?? '';
   $ip = $_SERVER['REMOTE_ADDR'] ?? '0.0.0.0';
@@ -53,6 +87,18 @@ if (!$panelOff && $_SERVER['REQUEST_METHOD'] === 'POST') {
         update("admin", "password", $hash, "username", $username);
         $storedNow = $hash;
       }
+      // 🔐 a code to Telegram first, when the bot asks for one (webauth.php)
+      if (web2fa_on()) {
+        unset($_SESSION['web2fa']);
+        if (web2fa_start($admin, !empty($_POST['remember']), $storedNow, $ip)) {
+          $info = $textbotlang['panel']['login2faSent'];
+        } else {
+          $error = $textbotlang['panel']['login2faSendFailed'];
+          error_log("Web panel login code could not be sent for username: $username");
+        }
+      }
+    }
+    if ($isCorrect && $admin && $admin['rule'] === 'administrator' && !web2fa_on()) {
       clear_login_rate($ip);
       session_regenerate_id(true);
       $_SESSION['admin_user'] = $admin['username'];
@@ -65,7 +111,7 @@ if (!$panelOff && $_SERVER['REQUEST_METHOD'] === 'POST') {
       flash('success', $textbotlang['panel']['loginWelcomeBack'] . $admin['username']);
       header('Location: index.php');
       exit;
-    } else {
+    } elseif (!($isCorrect && $admin && $admin['rule'] === 'administrator')) {
       $error = $textbotlang['panel']['loginWrongCredentials'];
       error_log("Failed login for username: $username from IP: $ip");
     }
@@ -140,6 +186,28 @@ $L = $textbotlang['panel'];
         <?php if ($error): ?>
           <p class="note" role="alert"><?= htmlspecialchars($error) ?></p>
         <?php endif; ?>
+        <?php if ($info): ?>
+          <p class="note off" role="status"><?= htmlspecialchars($info) ?></p>
+        <?php endif; ?>
+        <?php if (web2fa_pending()): ?>
+        <form id="login-form" method="POST" autocomplete="off">
+          <input type="hidden" name="_csrf" value="<?= csrf_token() ?>">
+          <div class="field">
+            <label for="tfa_code"><?= htmlspecialchars($L['login2faLabel']) ?></label>
+            <div class="input">
+              <svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="10" width="14" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+              <input type="text" id="tfa_code" name="tfa_code" placeholder="••••••" dir="ltr" inputmode="numeric"
+                autocomplete="one-time-code" pattern="[0-9۰-۹]{6}" maxlength="6" required autofocus>
+            </div>
+          </div>
+          <p class="lede"><?= htmlspecialchars($L['login2faHint']) ?> · <a href="login.php?tfa=cancel"><?= htmlspecialchars($L['login2faCancel']) ?></a></p>
+          <button type="submit" class="submit" id="submit">
+            <span><?= htmlspecialchars($L['login2faSubmit']) ?></span>
+            <span class="spin" aria-hidden="true"></span>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12H5m6-6-6 6 6 6"/></svg>
+          </button>
+        </form>
+        <?php else: ?>
         <form id="login-form" method="POST" autocomplete="on">
           <input type="hidden" name="_csrf" value="<?= csrf_token() ?>">
           <div class="field">
@@ -176,6 +244,7 @@ $L = $textbotlang['panel'];
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12H5m6-6-6 6 6 6"/></svg>
           </button>
         </form>
+        <?php endif; ?>
       <?php endif; ?>
       <p class="foot"><?= htmlspecialchars($L['loginHidePassword']) ?></p>
     </section>

@@ -29,6 +29,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'chang
     exit;
 }
 
+// 🔐 کد تایید تلگرامی هنگام ورود (webauth.php)
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'web2fa') {
+    csrf_check_post();
+    web2fa_set(($_POST['web2fa'] ?? '') === '1');
+    flash('success', $textbotlang['panel']['settings2faSaved']);
+    header('Location: settings.php?tab=security');
+    exit;
+}
+
 $tab = $_GET['tab'] ?? 'appearance';
 
 $themes = [
@@ -147,6 +156,19 @@ include __DIR__ . '/inc/layout_head.php';
     </div>
 
 <?php elseif ($tab === 'security'): ?>
+
+    <form method="POST" class="card fade-up" style="margin-bottom:14px">
+        <input type="hidden" name="_csrf" value="<?= csrf_token() ?>">
+        <input type="hidden" name="action" value="web2fa">
+        <div class="card-head"><div>
+            <div class="card-title"><?= icon('shield-check', 16) ?> <?= $textbotlang['panel']['settings2faTitle'] ?></div>
+            <div class="card-subtitle"><?= $textbotlang['panel']['settings2faHint'] ?></div>
+        </div></div>
+        <div class="card-body" style="display:flex;gap:12px;align-items:center;flex-wrap:wrap">
+            <label class="lang-chip"><input type="hidden" name="web2fa" value="0"><input type="checkbox" name="web2fa" value="1"<?= web2fa_on() ? ' checked' : '' ?>> <?= $textbotlang['panel']['settings2faOn'] ?></label>
+            <button type="submit" class="btn btn-primary btn-sm"><?= icon('check', 13) ?> <?= $textbotlang['panel']['bottextSaveBtn'] ?></button>
+        </div>
+    </form>
 
     <div class="two-col">
         <div class="card fade-up">
