@@ -1,0 +1,64 @@
+# Checks on every push and pull request - the same ones to run by hand before
+# a push:
+#   1. every PHP file parses, and install.sh is valid bash
+#   2. whatsnew.php: numbers only grow, both languages present
+#   3. no new placeholder difference between lang/fa.php and lang/en.php
+#   4. the rig: the real bot on a real database with a stand-in Telegram -
+#      install, update, tap through the screens, run crons, open the web panel
+name: checks
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    services:
+      mariadb:
+        image: mariadb:10.11
+        env:
+          MARIADB_ROOT_PASSWORD: root
+          MARIADB_DATABASE: ciro_rig
+          MARIADB_USER: rig
+          MARIADB_PASSWORD: rigpass
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="healthcheck.sh --connect --innodb_initialized"
+          --health-interval=5s --health-timeout=5s --health-retries=20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: pdo_mysql, mysqli, mbstring, curl, gd, zip, intl, bcmath
+          tools: composer
+          coverage: none
+
+      - name: PHP syntax and install.sh
+        run: |
+          fail=0
+          while IFS= read -r -d '' f; do
+            php -l "$f" >/dev/null 2>/tmp/lint || { cat /tmp/lint; fail=1; }
+          done < <(find . -name '*.php' -not -path './vendor/*' -not -path './.git/*' -print0)
+          bash -n install.sh || fail=1
+          exit $fail
+
+      - name: What's new
+        run: php tests/check_whatsnew.php
+
+      - name: Translations
+        run: php tests/check_i18n.php
+
+      - name: Dependencies
+        run: composer install --no-dev --no-interaction --no-progress
+
+      - name: Rig - the bot end to end
+        env:
+          DB_HOST: 127.0.0.1
+          DB_USER: rig
+          DB_PASS: rigpass
+          DB_NAME: ciro_rig
+        run: tests/rig/run.sh

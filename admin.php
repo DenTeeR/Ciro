@@ -9489,6 +9489,45 @@ if (preg_match('/^btact\|text\|([a-z]{2})\|(.+)$/', $datain, $btm) && $adminrule
         'users.Balance.chargeSuccess' => "• مبلغ واریزی: <code>{amount}</code>\n"
             . "• موجودی فعلی کاربر: <code>{balance}</code>\n"
             . "• بلوک تخفیف (وقتی تخفیف اعمال بشه، وگرنه خالیه): <code>{discount_block}</code>",
+        'users.support.tkListCaption' => "• تعداد تیکت‌های این مشتری: <code>{count}</code>",
+        'users.support.tkViewCaption' => "• شمارهٔ تیکت: <code>{id}</code>" . "\n"
+            . "• بخش پشتیبانی: <code>{department}</code>" . "\n"
+            . "• وضعیت تیکت: <code>{status}</code>" . "\n"
+            . "• گفتگو (پیام‌ها و جواب‌ها): <code>{messages}</code>",
+        'users.support.tkMsgYou' => "• زمان پیام: <code>{time}</code>",
+        'users.support.tkMsgSupport' => "• زمان جواب: <code>{time}</code>",
+        'users.support.tkClosedBySupport' => "• شمارهٔ تیکت: <code>{id}</code>",
+        'users.autorenew.turnedOn' => "• چند ساعت قبل از پایان: <code>{hours}</code>" . "\n"
+            . "• محصول تمدید: <code>{product}</code>" . "\n"
+            . "• مبلغ تمدید: <code>{price}</code>",
+        'users.autorenew.done' => "• نام کاربری سرویس: <code>{service}</code>" . "\n"
+            . "• محصول: <code>{product}</code>" . "\n"
+            . "• مبلغ کم‌شده: <code>{price}</code>" . "\n"
+            . "• موجودی بعد از تمدید: <code>{balance}</code>",
+        'users.autorenew.lowBalance' => "• نام کاربری سرویس: <code>{service}</code>" . "\n"
+            . "• مبلغ تمدید: <code>{price}</code>" . "\n"
+            . "• موجودی فعلی: <code>{balance}</code>",
+        'users.autorenew.failed' => "• نام کاربری سرویس: <code>{service}</code>",
+        'users.autorenew.noPlanNotice' => "• نام کاربری سرویس: <code>{service}</code>",
+        'users.winback.message' => "• نام کاربری سرویس تموم‌شده: <code>{service}</code>" . "\n"
+            . "• درصد تخفیف: <code>{percent}</code>" . "\n"
+            . "• چند روز اعتبار داره: <code>{days}</code>",
+        'users.wtransfer.askId' => "• موجودی فرستنده: <code>{balance}</code>",
+        'users.wtransfer.askAmount' => "• گیرنده (اسم و آیدی): <code>{to}</code>" . "\n"
+            . "• کمترین مبلغ: <code>{min}</code>" . "\n"
+            . "• بیشترین مبلغ: <code>{max}</code>" . "\n"
+            . "• موجودی فرستنده: <code>{balance}</code>",
+        'users.wtransfer.confirm' => "• مبلغ: <code>{amount}</code>" . "\n"
+            . "• گیرنده: <code>{to}</code>" . "\n"
+            . "• موجودی بعد از انتقال: <code>{after}</code>",
+        'users.wtransfer.done' => "• مبلغ: <code>{amount}</code>" . "\n"
+            . "• گیرنده: <code>{to}</code>" . "\n"
+            . "• موجودی فعلی: <code>{balance}</code>",
+        'users.wtransfer.received' => "• مبلغ: <code>{amount}</code>" . "\n"
+            . "• فرستنده (اسم و آیدی): <code>{from}</code>" . "\n"
+            . "• موجودی فعلی گیرنده: <code>{balance}</code>",
+        'users.wtransfer.errAmount' => "• کمترین مبلغ: <code>{min}</code>" . "\n"
+            . "• بیشترین مبلغ: <code>{max}</code>",
         'users.Balance.directPayCaption' => "• مبلغی که مشتری می‌پردازد (قیمت سرویس): <code>{price}</code>\n"
             . "\n💡 این متن بالای لیست روش‌های پرداخت میاد، وقتی مشتری «پرداخت مستقیم» رو بزنه.",
         'users.Balance.shortLine' => "• مبلغ کمبود برای این خرید: <code>{need}</code>\n"

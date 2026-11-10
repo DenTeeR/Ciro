@@ -1320,4 +1320,132 @@ return [
             . "3️⃣ Tap «📅 عضوهای قبل از تاریخ» and send the date; to remove it, «🗑 حذف تاریخ»\n"
             . "🌐 Web panel: «Gateways» → the card-to-card card → «📅 Members who joined by this day».</blockquote>",
     ],
+    [
+        'n' => 87,
+        'date' => '2026-11-10',
+        'fa' => "<blockquote>🛠 <b>رفع چند خطا</b>\n"
+            . "• <b>عکس به پشتیبانی نمی‌رسید:</b> مشتری‌ای که اسکرین‌شات یا ویدیو برای پشتیبانی می‌فرستاد، پیامش هیچ‌وقت به پشتیبان نمی‌رسید (فقط متن قبول می‌شد). حالا عکس، ویدیو، فایل و ویس با کپشنش می‌رسه و پشتیبان هم می‌تونه با عکس جواب بده.\n"
+            . "• پیام مشتری که توش «&lt;» بود، به پشتیبان نمی‌رسید؛ درست شد.\n"
+            . "• <b>نصب ربات دوم روی همون سرور:</b> اگه روی سرور یه ربات دیگه هم بود، نصب تازه بعضی جدول‌ها (کاربرها، ادمین‌ها، پشتیبانی) رو نمی‌ساخت. درست شد.\n"
+            . "• فاکتور Plisio برای مشتری‌های انگلیسی به‌جای شماره و مبلغ، «%s» نشون می‌داد. درست شد.\n"
+            . "ℹ️ نیازی به تنظیم نیست.</blockquote>",
+        'en' => "<blockquote>🛠 <b>Bug fixes</b>\n"
+            . "• <b>Photos never reached support:</b> a customer who sent a screenshot or video to support never got it delivered (only text was taken). Photos, videos, files and voice messages now arrive with their caption, and support can answer with a photo too.\n"
+            . "• A customer message with a «&lt;» in it did not reach support; fixed.\n"
+            . "• <b>A second bot on the same server:</b> with another bot already on the server, a fresh install skipped some tables (users, admins, support). Fixed.\n"
+            . "• The Plisio invoice showed «%s» instead of the number and amount to English customers. Fixed.\n"
+            . "ℹ️ Nothing to set up.</blockquote>",
+    ],
+    [
+        'n' => 88,
+        'date' => '2026-11-10',
+        'fa' => "<blockquote>📨 <b>تیکت‌های من</b>\n"
+            . "مشتری توی «☎️ پشتیبانی» دکمهٔ «📨 تیکت‌های من» رو می‌بینه: لیست تیکت‌هاش با وضعیت (🟡 در انتظار پاسخ، 🟢 پاسخ داده شد، ⚫️ بسته شد)، گفتگوی هر تیکت، «✍️ ارسال پیام در همین تیکت» و «🔒 بستن تیکت». پشتیبان هم زیر هر پیام، کنار «پاسخ به پیام»، دکمهٔ «🔒 بستن تیکت» داره.\n"
+            . "🔴 پیش‌فرض: <b>خاموش</b> (برای هر زبان جدا).\n"
+            . "📍 1️⃣ ⚙️ تنظیمات عمومی ← 🌐 وضعیت قابلیت‌ها (هر زبان)\n"
+            . "2️⃣ ردیف «📨 تیکت‌های من» رو روشن کن\n"
+            . "3️⃣ متن‌ها و دکمه‌ها: 🎨 ← ☎️ پشتیبانی، کد هدیه و پیام‌های دیگر\n"
+            . "🌐 پنل وب: «تیکت‌ها» (همهٔ تیکت‌ها، جواب دادن و بستن) و «قابلیت‌ها ← قابلیت‌های تازه».</blockquote>",
+        'en' => "<blockquote>📨 <b>My tickets</b>\n"
+            . "Under «☎️ Support» the customer gets «📨 My tickets»: their tickets with a state (🟡 waiting, 🟢 answered, ⚫️ closed), each ticket's conversation, «✍️ Write in this ticket» and «🔒 Close ticket». Support also gets «🔒 بستن تیکت» next to «پاسخ به پیام» under every message.\n"
+            . "🔴 Default: <b>off</b> (per language).\n"
+            . "📍 1️⃣ ⚙️ تنظیمات عمومی → 🌐 وضعیت قابلیت‌ها (هر زبان)\n"
+            . "2️⃣ Turn on the «📨 تیکت‌های من» row\n"
+            . "3️⃣ Texts and buttons: 🎨 → ☎️ پشتیبانی، کد هدیه و پیام‌های دیگر\n"
+            . "🌐 Web panel: «Tickets» (every ticket, answer and close) and «Features → New features».</blockquote>",
+    ],
+    [
+        'n' => 89,
+        'date' => '2026-11-10',
+        'fa' => "<blockquote>🔁 <b>تمدید خودکار از کیف پول</b>\n"
+            . "توی صفحهٔ هر سرویس («🛍 سرویس‌های من») دکمهٔ «🔁 تمدید خودکار: خاموش ❌» میاد. اگه مشتری روشنش کنه، وقتی سرویس داره تموم می‌شه یا حجمش تموم شد، ربات خودش با همون محصول از کیف پولش تمدید می‌کنه و بهش خبر می‌ده.\n"
+            . "مثال: سرویس ۳۰ روزه که فردا تموم می‌شه و مشتری ۲۰۰ هزار تومان موجودی داره → ۲۴ ساعت قبل از پایان، خودکار تمدید می‌شه.\n"
+            . "• پول اول کم می‌شه، بعد پنل تمدید می‌کنه؛ اگه پنل خطا بده پول برمی‌گرده و توی تاپیک خطا گزارش می‌شه.\n"
+            . "• موجودی کم باشه: روزی یک بار به مشتری خبر می‌ده (قابل خاموش کردن).\n"
+            . "• هر تمدید خودکار توی تاپیک «سایر خدمات» گزارش می‌شه.\n"
+            . "🔴 پیش‌فرض: <b>خاموش</b> (برای هر زبان جدا).\n"
+            . "📍 1️⃣ ⚙️ تنظیمات عمومی ← 🌐 وضعیت قابلیت‌ها (هر زبان)\n"
+            . "2️⃣ ردیف «🔁 تمدید خودکار از کیف پول» رو روشن کن\n"
+            . "3️⃣ «⚙️ تنظیمات» کنارش: چند ساعت قبل از پایان (پیش‌فرض ۲۴) و خبر موجودی کم\n"
+            . "🌐 پنل وب: «قابلیت‌ها ← قابلیت‌های تازه».</blockquote>",
+        'en' => "<blockquote>🔁 <b>Auto-renew from the wallet</b>\n"
+            . "Each service's page («🛍 My services») gets «🔁 Auto-renew: off ❌». With it on, when the service is about to end or its volume runs out, the bot renews it with the same plan from the customer's wallet and tells them.\n"
+            . "Example: a 30-day service ending tomorrow, 200,000 toman in the wallet → renewed by itself 24 hours before the end.\n"
+            . "• The money comes off first, then the panel renews; if the panel fails, the money goes back and the error topic is told.\n"
+            . "• Not enough balance: the customer is told once a day (can be turned off).\n"
+            . "• Every auto-renewal is reported in the «other services» topic.\n"
+            . "🔴 Default: <b>off</b> (per language).\n"
+            . "📍 1️⃣ ⚙️ تنظیمات عمومی → 🌐 وضعیت قابلیت‌ها (هر زبان)\n"
+            . "2️⃣ Turn on «🔁 تمدید خودکار از کیف پول»\n"
+            . "3️⃣ «⚙️ تنظیمات» beside it: hours before the end (24 by default) and the low-balance notice\n"
+            . "🌐 Web panel: «Features → New features».</blockquote>",
+    ],
+    [
+        'n' => 90,
+        'date' => '2026-11-10',
+        'fa' => "<blockquote>💌 <b>پیام برگشت مشتری</b>\n"
+            . "مشتری‌ای که سرویسش تموم شده و برنگشته، چند روز بعد یه پیام «دلمون برات تنگ شده» با تخفیف مخصوص خودش روی خرید یا تمدید بعدی می‌گیره. تخفیف خودکار روی فاکتور حساب می‌شه (کدی لازم نیست) و بعد از اولین خرید یا تمدید، یا وقتی روزهاش تموم شد، برمی‌گرده به قبل.\n"
+            . "مثال: ۳ روز بعد از تموم شدن سرویس، ۱۵٪ تخفیف که ۷ روز اعتبار داره.\n"
+            . "• فقط برای کسی که سرویس فعال دیگه‌ای نداره، هر نفر حداکثر ماهی یک بار.\n"
+            . "• روشن کردنش به مشتری‌هایی که خیلی وقت پیش رفتن پیام نمی‌ده.\n"
+            . "• هر برگشت توی تاپیک «سایر خدمات» گزارش می‌شه؛ آمار فرستاده و برگشته توی صفحهٔ تنظیماتش.\n"
+            . "🔴 پیش‌فرض: <b>خاموش</b> (برای هر زبان جدا).\n"
+            . "📍 1️⃣ ⚙️ تنظیمات عمومی ← 🌐 وضعیت قابلیت‌ها (هر زبان)\n"
+            . "2️⃣ ردیف «💌 پیام برگشت مشتری» رو روشن کن\n"
+            . "3️⃣ «⚙️ تنظیمات» کنارش: چند روز بعد، درصد تخفیف، اعتبار تخفیف\n"
+            . "🌐 پنل وب: «قابلیت‌ها ← قابلیت‌های تازه».</blockquote>",
+        'en' => "<blockquote>💌 <b>Win-back message</b>\n"
+            . "A customer whose service ended and who did not come back gets a «we miss you» message a few days later, with a discount of their own on the next purchase or renewal. It is applied on the invoice by itself (no code to type) and goes back after the first purchase or renewal, or when its days end.\n"
+            . "Example: 3 days after the service ended, 15% off for 7 days.\n"
+            . "• Only for someone with no other live service, at most once a month per person.\n"
+            . "• Turning it on does not message customers who left long ago.\n"
+            . "• Every return is reported in the «other services» topic; sent and returned counts are on its settings screen.\n"
+            . "🔴 Default: <b>off</b> (per language).\n"
+            . "📍 1️⃣ ⚙️ تنظیمات عمومی → 🌐 وضعیت قابلیت‌ها (هر زبان)\n"
+            . "2️⃣ Turn on «💌 پیام برگشت مشتری»\n"
+            . "3️⃣ «⚙️ تنظیمات» beside it: after how many days, the percent, how long it lasts\n"
+            . "🌐 Web panel: «Features → New features».</blockquote>",
+    ],
+    [
+        'n' => 91,
+        'date' => '2026-11-10',
+        'fa' => "<blockquote>💸 <b>انتقال موجودی بین کاربرها</b>\n"
+            . "توی «👤 حساب کاربری» دکمهٔ «💸 انتقال موجودی» میاد: مشتری آیدی عددی گیرنده رو می‌فرسته، مبلغ رو می‌نویسه و تایید می‌کنه؛ همون لحظه از کیف پول خودش کم و به کیف پول گیرنده اضافه می‌شه و به هر دو خبر داده می‌شه.\n"
+            . "• فقط بین کیف پول‌های هم‌ارز (تومان به تومان، دلار به دلار) و فقط از موجودی واقعی.\n"
+            . "• زدن دوبارهٔ «تایید» دوبار انتقال نمی‌ده.\n"
+            . "• هر انتقال توی تاپیک «پرداخت‌ها» با دکمهٔ مدیریت هر دو کاربر گزارش می‌شه.\n"
+            . "🔴 پیش‌فرض: <b>خاموش</b> (برای هر زبان جدا).\n"
+            . "📍 1️⃣ ⚙️ تنظیمات عمومی ← 🌐 وضعیت قابلیت‌ها (هر زبان)\n"
+            . "2️⃣ ردیف «💸 انتقال موجودی بین کاربرها» رو روشن کن\n"
+            . "3️⃣ «⚙️ تنظیمات» کنارش: کمترین و بیشترین مبلغ هر انتقال\n"
+            . "🌐 پنل وب: «قابلیت‌ها ← قابلیت‌های تازه».</blockquote>",
+        'en' => "<blockquote>💸 <b>Balance transfer between users</b>\n"
+            . "«👤 Account» gets «💸 Transfer balance»: the customer sends the receiver's numeric ID, types the amount and confirms; it comes off their wallet and onto the receiver's at once, and both are told.\n"
+            . "• Only between wallets of the same currency (toman to toman, dollar to dollar) and only from real balance.\n"
+            . "• Tapping «confirm» twice never transfers twice.\n"
+            . "• Every transfer is reported in the «payments» topic with a manage button for both users.\n"
+            . "🔴 Default: <b>off</b> (per language).\n"
+            . "📍 1️⃣ ⚙️ تنظیمات عمومی → 🌐 وضعیت قابلیت‌ها (هر زبان)\n"
+            . "2️⃣ Turn on «💸 انتقال موجودی بین کاربرها»\n"
+            . "3️⃣ «⚙️ تنظیمات» beside it: the smallest and largest amount of one transfer\n"
+            . "🌐 Web panel: «Features → New features».</blockquote>",
+    ],
+    [
+        'n' => 92,
+        'date' => '2026-11-10',
+        'fa' => "<blockquote>🔐 <b>کد تایید تلگرامی برای ورود به پنل وب</b>\n"
+            . "با روشن کردنش، بعد از وارد کردن رمز درست، یه کد ۶ رقمی از طرف همین ربات به تلگرامت میاد و پنل وب فقط با اون کد باز می‌شه. اگه کسی رمزت رو داشته باشه، بدون تلگرامت نمی‌تونه وارد بشه، و توی پیام کد، IP کسی که رمز رو زده نوشته می‌شه.\n"
+            . "• کد ۵ دقیقه اعتبار داره و ۵ بار می‌شه امتحانش کرد.\n"
+            . "🔴 پیش‌فرض: <b>خاموش</b>.\n"
+            . "📍 1️⃣ ⚙️ تنظیمات عمومی ← پنل تحت وب ربات 🤖\n"
+            . "2️⃣ «🔐 کد تایید تلگرامی هنگام ورود» رو بزن تا ✅ بشه\n"
+            . "🌐 پنل وب: «تنظیمات ← امنیت».</blockquote>",
+        'en' => "<blockquote>🔐 <b>A Telegram code to log in to the web panel</b>\n"
+            . "With it on, after the right password a 6-digit code comes from this bot to your Telegram, and the web panel opens only with it. Someone with your password cannot get in without your Telegram, and the code message names the IP that typed the password.\n"
+            . "• The code lasts 5 minutes and can be tried 5 times.\n"
+            . "🔴 Default: <b>off</b>.\n"
+            . "📍 1️⃣ ⚙️ تنظیمات عمومی → پنل تحت وب ربات 🤖\n"
+            . "2️⃣ Tap «🔐 کد تایید تلگرامی هنگام ورود» until it shows ✅\n"
+            . "🌐 Web panel: «Settings → Security».</blockquote>",
+    ],
 ];

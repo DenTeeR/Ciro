@@ -1,0 +1,25 @@
+# Differences between lang/fa.php and lang/en.php that are known and harmless
+# (tests/check_i18n.php fails only on one that is not listed here).
+#
+# Admin texts: the panel is Persian for every admin (panel_texts()).
+Admin.FeatureSection.affTitle
+Admin.manageUser.infoSummary
+# «50% for», «10% off» read by the checker as a format code - plain text.
+hardcoded.topupDiscAllPercentCaption
+hardcoded.topupDiscGroupPercentCaption
+hardcoded.topupDiscMinPercentCaption
+hardcoded.topupDiscPercentCaption
+hardcoded.volumePctDefaultText
+users.affiliates.membershipGiftInfo
+# English says the time and volume in words of its own ({time_human},
+# {volume_human}); the code fills both sets.
+textbot.afterPay
+textbot.afterPayIbsng
+textbot.wgDashboard
+users.affiliates.rewardAfterPay
+users.sell.created
+users.sell.created2
+# English keeps one card ({card_number}/{name_card}), which card_invoice_render() still fills.
+textbot.cart
+# An English wallet is in dollars: the toman equivalent is left out.
+users.Balance.transactionCreatedTron

@@ -13,5 +13,5 @@ Options -Indexes
 </FilesMatch>
 
 <IfModule mod_alias.c>
-    RedirectMatch 404 /(\.git|vendor|storage)(/|$)
+    RedirectMatch 404 /(\.git|\.github|vendor|storage|tests)(/|$)
 </IfModule>

@@ -553,25 +553,17 @@ Pay <b>{price}</b> with one of the methods below; once it is paid, your request 
                         'lessThanPrice' => 'The balance is less than the product price',
                         'cardInstruction' => 'To pay, deposit the amount to the card number below',
                         'cryptoInstruction' => '
-<b>💲 To top up your wallet balance via cryptocurrency, click the payment button at the end of the message</b>
+<b>💲 To top up your wallet with cryptocurrency, tap the payment button at the end of this message</b>
 
-⚠️ Note:  the payment time is 30 minutes; after 30 minutes the transaction will be canceled
+⚠️ Note: you have {minutes} minutes to pay; after {minutes} minutes the transaction is cancelled
 
-🌐 Some domestic sites for buying cryptocurrency 👇
-🔸 nikpardakht.com
-🔹 webpurse.org
-🔸 bitpin.ir
-🔹 sarmayex.com
-🔸 ok-ex.io
-🔹 nobitex.ir
-🔸 bitbarg.com
-🔹 cafearz.com
-🔸 pay98.app
-🔢 Invoice number : %s
-💰 Invoice amount : %s Dollar
-📊 Dollar price: %s Toman as of now
+🧾 Invoice number: {order}
+💰 Invoice amount: {price}
+📊 Dollar rate right now: {usd} Toman
 
-Use the button below to pay👇🏻',
+<blockquote>⚠️ Once the full amount arrives, your wallet is topped up automatically within the next 5 minutes.</blockquote>
+
+Use the button below to pay 👇🏻',
                         'cryptoInstruction2' => '
 <b>💲 To top up your wallet balance via cryptocurrency, click the payment button at the end of the message</b>
 
@@ -1958,7 +1950,7 @@ To turn it off, open this service in «🛍 My services».',
                 'winback' => [
                         'message' => '💌 <b>We miss you!</b>
 
-<blockquote>Your service {service} ended a few days ago. Come back within <b>{days} days</b> and get <b>{percent}% off</b> your next purchase or renewal.</blockquote>
+<blockquote>Your service {service} ended a few days ago. Come back within <b>{days} days</b> and get <b>{percent}%</b> off your next purchase or renewal.</blockquote>
 The discount is applied on the invoice by itself; no code needed.',
                         'btnBuy' => '🛍 Buy a subscription',
                 ],
