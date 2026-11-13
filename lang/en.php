@@ -446,6 +446,10 @@ Please use the menu buttons below, or send /start.',
 💸 To top up your balance, enter the amount in Dollar:
 ✅ Minimum amount %s Dollar, maximum amount %s Dollar',
                         'insufficientBalanceSimple' => '❌ Insufficient balance.',
+                        'shortMessage' => '❌ Insufficient balance.
+
+💡 You are <b>{need}</b> short for this purchase.
+Use the button below to top up exactly that; once it is paid, the purchase is made automatically.',
                         'shortLine' => '💡 You are <b>{need}</b> short for this purchase.
 Use the button below to top up exactly that; once it is paid, the purchase is made automatically.',
                         'shortUnderMin' => '💡 The minimum top-up with this method is <b>{min}</b>, but you are only <b>{need}</b> short for this purchase, so an invoice for exactly that cannot be made.
@@ -5706,6 +5710,7 @@ We hope you had a good experience with the ease and speed of your service. If yo
                 'gwCardTrustMin' => '🛡 Purchases/renewals needed for card to card',
                 'gwCardTrustMinHint' => 'While «🛡 Only for returning customers» is on: only a customer with more paid purchases or renewals than this sees card to card. Empty means 3.',
                 'gwCardTrustMinInvalid' => 'The purchases/renewals needed must be a number from 1 to 1000.',
+                'btnSfDirectNote' => 'Shown only while direct payment is on for this purchase. Its name, colour and emoji come from the purchase confirm buttons; here it is only shown or hidden.',
                 'gwCardTrustDate' => '📅 Members who joined by this day (Gregorian)',
                 'gwCardTrustDateHint' => 'While «🛡 Only for returning customers» is on: anyone who joined the bot by the end of this day also sees card to card, even with fewer purchases. Empty means no date rule.',
                 'gwCardTrustDateNow' => 'Now: until %s · %s users of this language joined by that day.',

@@ -15,7 +15,13 @@ function genbtn_card($alias, $key, array $defs, $lang, array $t, array $colors, 
     <div class="card-subtitle"><?= $textOnly ? $t['btnTextOnly'] : (in_array($alias, ['gb', 'kb'], true) ? $t['btnAllPlaces'] : '') ?></div></div></div>
   <div class="card-body">
     <?php foreach ($defs as $idx => $def): $ov = genbtn_override($lang, $key, $idx); $n = "b[$idx]";
-      $isHidden = array_key_exists('hidden', $ov) ? (bool) $ov['hidden'] : !empty($def['hidden']); ?>
+      $isHidden = array_key_exists('hidden', $ov) ? (bool) $ov['hidden'] : !empty($def['hidden']);
+      if ($alias === 'sf' && (int) $idx === 1): // 💳: drawn as on the confirm page, only shown/hidden here ?>
+      <div class="set-row" style="flex-wrap:wrap">
+        <div style="min-width:180px"><div class="set-label"><?= htmlspecialchars(ui_plain($def['name'])) ?></div><div class="set-hint"><?= $t['btnSfDirectNote'] ?></div></div>
+        <div class="lang-chips" style="flex:1;justify-content:flex-end"><label class="lang-chip"><input type="hidden" name="<?= $n ?>[hidden]" value="0"><input type="checkbox" name="<?= $n ?>[hidden]" value="1"<?= $isHidden ? ' checked' : '' ?>> <?= $t['menuHidden'] ?></label></div>
+      </div>
+      <?php continue; endif; ?>
       <div class="set-row" style="flex-wrap:wrap">
         <div style="min-width:180px"><div class="set-label"><?= htmlspecialchars(ui_plain($def['name'])) ?></div><?php if (!empty($def['note'])): ?><div class="set-hint"><?= htmlspecialchars(ui_plain($def['note'])) ?></div><?php endif; ?></div>
         <div class="lang-chips" style="flex:1;justify-content:flex-end">

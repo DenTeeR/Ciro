@@ -403,7 +403,7 @@ return array (
       ),
       26 => 
       array (
-        'label' => '✏️ ویرایش پیام موجودی ناکافی',
+        'label' => '❌ پیام موجودی ناکافی (خرید عمده)',
         'key' => 'users.Balance.insufficientBalanceSimple',
         'group' => 'buyflow',
         'section' => 'balance',
@@ -482,10 +482,22 @@ return array (
         'group' => 'myservices',
         'section' => 'myservices_usagereport',
       ),
+      // 📝 the purchase's «موجودی کافی نیست»: its caption in one piece, its
+      // buttons, and from there the payment-method message that follows
+      // (users.sell.noCredit, opened from inside it)
       array (
         'label' => '📝 پیام «موجودی کافی نیست»',
+        'key' => 'users.Balance.shortMessage',
+        'group' => 'buyflow',
+        'section' => 'confirm',
+      ),
+      // the caption over the payment methods after «💰 افزایش موجودی» - and
+      // in the other paths that ask for a method; opened from the message above
+      array (
+        'label' => '💳 پیام «یک روش پرداخت انتخاب کن»',
         'key' => 'users.sell.noCredit',
         'group' => 'buyflow',
+        'section' => 'confirm',
       ),
       array (
         'label' => '⛔️ پیام «هیچ درگاهی فعال نیست»',
@@ -1494,7 +1506,6 @@ return array (
       'dp_1' => array ('label' => '💳 متن مرحلهٔ «پرداخت مستقیم» (بالای لیست روش‌های پرداخت)', 'key' => 'users.Balance.directPayCaption', 'group' => 'buyflow', 'section' => 'confirm'),
       'dp_2' => array ('label' => '⛔️ پرداخت مستقیم الان در دسترس نیست', 'key' => 'users.Balance.directPayGone', 'group' => 'buyflow', 'section' => 'confirm'),
       'dp_3' => array ('label' => '💰 سرویس این پرداخت قبلاً تحویل شده (مبلغ به کیف پول رفت)', 'key' => 'users.Balance.paidInvoiceTaken', 'group' => 'topup', 'section' => 'topup_done'),
-      'sf_1' => array ('label' => '💡 جملهٔ «کمبود موجودی برای این خرید» (زیر پیام موجودی ناکافی)', 'key' => 'users.Balance.shortLine', 'group' => 'buyflow', 'section' => 'balance'),
       'sf_2' => array ('label' => '💡 نقل‌قول «کمبود کمتر از حداقل شارژ است»', 'key' => 'users.Balance.shortUnderMin', 'group' => 'topup', 'section' => 'topup_flow'),
       'sf_3' => array ('label' => '💡 نقل‌قول «کمبود بیشتر از حداکثر شارژ است»', 'key' => 'users.Balance.shortOverMax', 'group' => 'topup', 'section' => 'topup_flow'),
       'sf_4' => array ('label' => '⚠️ بعد از شارژ، هنوز برای خرید کم است', 'key' => 'users.Balance.shortCharged', 'group' => 'topup', 'section' => 'topup_done'),
@@ -2248,6 +2259,12 @@ return array (
 برای ادامه، دکمهٔ زیر را بزنید.',
       'confirmContinueBtn' => '✅ ادامه با %s',
       'insufficientBalanceSimple' => '❌ موجودی کافی نمی‌باشد.',
+      // 📝 the purchase's «موجودی کافی نیست» message, in one piece (shortfall.php):
+      // {need} what is lacking, {price} the price, {balance} the wallet
+      'shortMessage' => '❌ موجودی کافی نمی‌باشد.
+
+💡 برای این خرید <b>{need}</b> کم داری.
+با دکمهٔ زیر همین مبلغ رو شارژ کن؛ بعد از پرداخت، خرید خودکار انجام می‌شه.',
       // 💰 افزایش موجودی به اندازهٔ کمبود (shortfall.php)
       'shortLine' => '💡 برای این خرید <b>{need}</b> کم داری.
 با دکمهٔ زیر همین مبلغ رو شارژ کن؛ بعد از پرداخت، خرید خودکار انجام می‌شه.',
@@ -3754,7 +3771,7 @@ n2',
       'colorCaption' => '🎨 <b>رنگ‌بندی</b>
 
 روی هر کدوم بزن تا رنگش عوض بشه 👇
-⚪ پیش‌فرض ← 🔵 آبی ← 🟢 سبز ← 🔴 قرمز',
+هر دکمه اول با رنگ پیش‌فرض خودش نشون داده می‌شه (⚪ یعنی بدون رنگ). هر بار زدن رنگ بعدی رو می‌ذاره (🔵 آبی، 🟢 سبز، 🔴 قرمز) و آخرش برمی‌گرده به پیش‌فرض.',
       'simpleModeBtn' => '🔲 حالت ساده: {state}',
       'emojiSideBtn' => '↔️ جای ایموجی: {side}',
       'emojiSideRight' => 'راست ➡️',
@@ -11307,6 +11324,7 @@ nowpayments.io
     'gwCardTrustMin' => '🛡 تعداد خرید/تمدید لازم برای کارت‌به‌کارت',
     'gwCardTrustMinHint' => 'وقتی «🛡 فقط برای مشتری‌های قدیمی» روشن است: فقط مشتری‌ای که بیشتر از این تعداد خرید یا تمدید پرداخت‌شده داشته کارت‌به‌کارت را می‌بیند. خالی یعنی ۳.',
     'gwCardTrustMinInvalid' => 'تعداد خرید/تمدید لازم باید یک عدد بین ۱ تا ۱۰۰۰ باشد.',
+    'btnSfDirectNote' => 'فقط وقتی پرداخت مستقیم برای این خرید روشنه میاد. اسم، رنگ و ایموجیش از «دکمه‌های تأیید خرید» (کپشن تأیید خرید عادی) میاد؛ اینجا فقط نشون دادن یا مخفی کردنش.',
     'gwCardTrustDate' => '📅 عضوهای قبل از این تاریخ (میلادی)',
     'gwCardTrustDateHint' => 'وقتی «🛡 فقط برای مشتری‌های قدیمی» روشن است: هر کاربری که تا آخر این روز عضو ربات شده هم کارت‌به‌کارت را می‌بیند، حتی با خرید کمتر. خالی یعنی بدون شرط تاریخ.',
     'gwCardTrustDateNow' => 'الان: تا %s · %s نفر از کاربرهای این زبان تا این روز عضو شده‌اند.',

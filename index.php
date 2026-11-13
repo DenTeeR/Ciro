@@ -1379,8 +1379,9 @@ if ($text == "/start" || $datain == "start" || $text == "start") {
         return;
     }
     $nameloc = $stmt->fetch(PDO::FETCH_ASSOC);
-    $username = $nameloc['id_invoice'];
-    if (!in_array($nameloc['Status'], ['active', 'end_of_time', 'end_of_volume', 'sendedwarn', 'send_on_hold'])) {
+    // a tap from an old list whose service is gone answers like an unavailable one
+    $username = is_array($nameloc) ? $nameloc['id_invoice'] : '';
+    if (!is_array($nameloc) || !in_array($nameloc['Status'], ['active', 'end_of_time', 'end_of_volume', 'sendedwarn', 'send_on_hold'])) {
         sendmessage($from_id, $textbotlang['users']['status']['infoUnavailable'], $keyboard, 'html');
         step('home', $from_id);
         return;

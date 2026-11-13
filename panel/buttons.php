@@ -56,6 +56,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             foreach ($defs as $idx => $def) {
                 $p = (array) ($posted[$idx] ?? []);
                 $ov = genbtn_override($lang, $key, $idx);
+                if ($alias === 'sf' && (int) $idx === 1) {
+                    // 💳 under «موجودی کافی نیست»: its look is the confirm page's, only shown/hidden here
+                    $wantHidden = ($p['hidden'] ?? '') === '1';
+                    if ($wantHidden !== !empty($ov['hidden'])) {
+                        genbtn_set_style($lang, $key, $idx, null, null, null, null, null, $wantHidden);
+                    }
+                    continue;
+                }
                 $text = trim((string) ($p['text'] ?? ''));
                 if ($text === '' || $text === (string) $def['text']) {
                     if (isset($ov['text'])) {

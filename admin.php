@@ -1140,7 +1140,7 @@ if (!function_exists('bottext_item_menu_payload')) {
             $bt_label = '📜 فاکتور تمدید سرویس';
         }
         if ($bt_key === 'users.sell.noCredit') {
-            $bt_label = '📝 پیام «موجودی کافی نیست»';
+            $bt_label = '💳 پیام «یک روش پرداخت انتخاب کن»';
         }
         if ($bt_key === 'users.extend.insufficientBalanceAlert') {
             $bt_label = '⚠️ هشدار موجودی ناکافی (تمدید)';
@@ -1210,7 +1210,13 @@ if (!function_exists('bottext_item_menu_payload')) {
             $bt_extra_note = "\nℹ️ این پیام وقتی نشون داده می‌شه که کاربر اسم دلخواه سرویسش رو بفرسته و قابل قبول نباشه - توی خرید سرویس، اکانت تست، اکانت ساعتی و اسم دلخواه نماینده؛ همین یک متن همه‌جا استفاده می‌شه.\n📌 اسم قابل قبول: فقط حرف انگلیسی، عدد و _ ، با حرف شروع بشه، با _ تموم نشه و ۳ تا ۳۳ حرف باشه.\n";
         }
         if ($bt_key === 'users.sell.noCredit') {
-            $bt_extra_note = "\nℹ️ این پیام وقتی نشون داده می‌شه که کاربر توی هر مرحله‌ی پرداختی (خرید، حجم/زمان اضافه، شارژ کیف پول) موجودی کافی نداشته باشه و باید یه روش پرداخت انتخاب کنه - یه پیام مشترکه، همه‌جا با هم عوض می‌شه. (تمدید سرویس دیگه از این پیام استفاده نمی‌کنه - به ⚠️ هشدار موجودی ناکافی (تمدید) نگاه کن.)\n";
+            $bt_extra_note = "\nℹ️ این پیام بالای لیست روش‌های پرداخت میاد، وقتی کاربر باید یه روش پرداخت انتخاب کنه (حجم/زمان اضافه، شارژ کیف پول و جاهای دیگه) - یه پیام مشترکه، همه‌جا با هم عوض می‌شه. (تمدید سرویس دیگه از این پیام استفاده نمی‌کنه - به ⚠️ هشدار موجودی ناکافی (تمدید) نگاه کن.)\n";
+        }
+        if ($bt_key === 'users.Balance.shortMessage') {
+            $bt_extra_note = "\nℹ️ این پیام وقتی میاد که مشتری موقع خرید سرویس (محصول آماده یا 🧩 حجم دلخواه) «تایید و پرداخت» رو بزنه و موجودیش کافی نباشه. کل متن یه تیکه‌ست و از «✏️ ویرایش کپشن» عوض می‌شه.\n💰 دکمه‌ی «افزایش موجودی» همین کمبود رو شارژ می‌کنه و بعد از پرداخت خرید خودکار انجام می‌شه.\n💳 اگه پرداخت مستقیم برای این خرید روشن باشه، دکمه‌ی «پرداخت مستقیم» هم زیرش میاد (شکلش از «🔘 دکمه‌های تأیید خرید»).\n🔤 توی متن می‌تونی بذاری: <code>{need}</code> مبلغ کمبود، <code>{price}</code> قیمت خرید، <code>{balance}</code> موجودی فعلی.\n";
+        }
+        if ($bt_key === 'users.Balance.insufficientBalanceSimple') {
+            $bt_extra_note = "\nℹ️ این پیام فقط توی خرید عمده (چند سرویس با هم) میاد. برای خرید عادی، پیام «📝 موجودی کافی نیست» توی بخش «🧾 تأیید خرید» هست.\n💡 دکمه‌ی «💰 افزایش موجودی» این‌جا همون دکمه‌ی مشترکیه که توی فاکتور تمدید هم هست.\n";
         }
         if ($bt_key === 'users.extend.insufficientBalanceAlert') {
             $bt_extra_note = "\nℹ️ این متن به‌صورت یه پاپ‌آپ (Alert) نشون داده می‌شه، نه یه پیام معمولی - وقتی کاربر روی «✅ تایید تمدید» بزنه و موجودیش کافی نباشه. فاکتور تمدید دست‌نخورده باقی می‌مونه.\n";
@@ -1350,7 +1356,7 @@ if (!function_exists('bottext_item_menu_payload')) {
         // separate configDisplayBuy/configColOrderBuy pair, so it gets its own
         // forward link straight from the myservices list (keyboard.php) instead
         // of the generic $bt_btn_label/$bt_btn_custom status line below.
-        $bt_has_buttons = in_array($bt_key, ['users.usertest.selectUsernamePrompt', 'users.Balance.insufficientBalanceSimple', 'users.sell.selectUsernamePrompt', 'users.sell.preInvoice', 'users.sell.preInvoice2', 'textbot.preInvoice', 'users.sell.service_not_available', 'textbot.testExpired', 'users.usertest.limitwarning', 'users.sell.service_sell', 'users.status.infoFull', 'users.Balance.chargeSuccess', 'textbot.channel', 'users.channel.left_channel', 'users.extend.invoiceCreated', 'users.changeLink.warnchange', 'textbot.afterPay', 'textbot.afterText', 'users.affiliates.rewardAfterPay', 'users.subapps.listBuy', 'users.cvol.caption'], true);
+        $bt_has_buttons = in_array($bt_key, ['users.usertest.selectUsernamePrompt', 'users.Balance.insufficientBalanceSimple', 'users.Balance.shortMessage', 'users.sell.selectUsernamePrompt', 'users.sell.preInvoice', 'users.sell.preInvoice2', 'textbot.preInvoice', 'users.sell.service_not_available', 'textbot.testExpired', 'users.usertest.limitwarning', 'users.sell.service_sell', 'users.status.infoFull', 'users.Balance.chargeSuccess', 'textbot.channel', 'users.channel.left_channel', 'users.extend.invoiceCreated', 'users.changeLink.warnchange', 'textbot.afterPay', 'textbot.afterText', 'users.affiliates.rewardAfterPay', 'users.subapps.listBuy', 'users.cvol.caption'], true);
         $info = "📝 <b>{$bt_label}</b>\n➖➖➖➖➖➖➖➖➖➖\n{$bt_extra_note}";
         $info .= "✏️ متن: " . ($bt_custom ? "سفارشی ✅" : "پیش‌فرض") . "\n";
         if (!$bt_nosticker) {
@@ -1367,6 +1373,8 @@ if (!function_exists('bottext_item_menu_payload')) {
             $bt_btn_label = '🔘 دکمه‌های انصراف/پیش‌فرض';
             if ($bt_key === 'users.Balance.insufficientBalanceSimple') {
                 $bt_btn_label = '🔘 دکمه افزایش موجودی';
+            } elseif ($bt_key === 'users.Balance.shortMessage') {
+                $bt_btn_label = '🔘 دکمه‌های این پیام';
             } elseif (in_array($bt_key, ['users.sell.preInvoice', 'users.sell.preInvoice2', 'textbot.preInvoice'], true)) {
                 $bt_btn_label = '🔘 دکمه‌های تأیید خرید';
             } elseif ($bt_key === 'users.sell.service_not_available') {
@@ -1396,9 +1404,9 @@ if (!function_exists('bottext_item_menu_payload')) {
             } elseif ($bt_key === 'users.cvol.caption') {
                 $bt_btn_label = '🔘 دکمه‌های صفحه‌ی حجم دلخواه';
             }
-            // 'cf' is shared across three caption screens - checked here so its
-            // own status line is accurate no matter which of the three is open
-            if (in_array($bt_key, ['users.sell.preInvoice', 'users.sell.preInvoice2', 'textbot.preInvoice'], true)) {
+            // 'cf' (the normal purchase's confirm row) is not the caption's own
+            // key; the bulk caption's pair ('cb') is, so it needs no mapping
+            if (in_array($bt_key, ['users.sell.preInvoice', 'textbot.preInvoice'], true)) {
                 $bt_be_key = 'users.sell.confirmButtons';
             } else {
                 $bt_be_key = $bt_key;
@@ -1519,13 +1527,19 @@ if (!function_exists('bottext_item_menu_payload')) {
             // 🎨 home list (📲 افزودن سرویس به برنامه) - not repeated here
         } elseif ($bt_key === 'users.Balance.insufficientBalanceSimple') {
             $kb['inline_keyboard'][] = [$bt_live_row($bt_balance_live(), '🔘 ویرایش دکمه افزایش موجودی', "btact|bbtn|{$bt_lang}", $bt_btn_custom)];
+        } elseif ($bt_key === 'users.Balance.shortMessage') {
+            // 💰 / 💳 under it (genbtn 'sf'), then the message the customer reaches next
+            $kb['inline_keyboard'][] = [['text' => '🔘 ویرایش دکمه‌های این پیام', 'callback_data' => "gbs|hub|{$bt_lang}|sf", 'style' => $bt_btn_custom ? 'success' : 'primary']];
+            $kb['inline_keyboard'][] = [['text' => '💳 پیام بعدی: «یک روش پرداخت انتخاب کن»', 'callback_data' => "bt_edit|{$bt_lang}|users.sell.noCredit", 'style' => $bt_is_customized('users.sell.noCredit') ? 'success' : 'primary']];
         } elseif ($bt_key === 'users.sell.selectUsernamePrompt') {
             $kb['inline_keyboard'][] = [['text' => '🔘 ویرایش دکمه‌های انصراف/پیش‌فرض', 'callback_data' => "gbs|hub|{$bt_lang}|su", 'style' => 'primary']];
         } elseif ($bt_key === 'users.payg.askUsername') {
             // ⏱'s own pair, apart from the purchase's
             $kb['inline_keyboard'][] = [['text' => '🔘 ویرایش دکمه‌های انصراف/پیش‌فرض', 'callback_data' => "gbs|hub|{$bt_lang}|pu", 'style' => 'primary']];
         } elseif (in_array($bt_key, ['users.sell.preInvoice', 'users.sell.preInvoice2', 'textbot.preInvoice'], true)) {
-            $kb['inline_keyboard'][] = [['text' => '🔘 ویرایش دکمه‌های تأیید خرید', 'callback_data' => "gbs|hub|{$bt_lang}|cf", 'style' => 'primary']];
+            // the bulk purchase has its own pair ('cb'), apart from the normal one's
+            $bt_cf_alias = $bt_key === 'users.sell.preInvoice2' ? 'cb' : 'cf';
+            $kb['inline_keyboard'][] = [['text' => '🔘 ویرایش دکمه‌های تأیید خرید', 'callback_data' => "gbs|hub|{$bt_lang}|{$bt_cf_alias}", 'style' => $bt_btn_custom ? 'success' : 'primary']];
         } elseif ($bt_key === 'users.sell.service_not_available') {
             $kb['inline_keyboard'][] = [$bt_live_row(genbtn_row_label($bt_key, $bt_lang), '🔘 ویرایش دکمه تهیه اشتراک', "gbs|hub|{$bt_lang}|ns", $bt_btn_custom)];
         } elseif ($bt_key === 'textbot.testExpired') {
@@ -1633,6 +1647,49 @@ if (!function_exists('bottext_item_menu_payload')) {
     }
 }
 
+if (!function_exists('bt_edit_prompt_with_current')) {
+    // The ✏️ prompt with the item's current text (custom or default) as its
+    // HTML source in a <pre> block - Telegram shows it with a copy button, so
+    // an admin starts from what is there instead of retyping it. A message is
+    // capped at 4096 characters: if the source and the formatting guide do not
+    // fit together the guide is shortened, and a source too long even alone is
+    // cut (said so) rather than letting the edit fail.
+    function bt_edit_prompt_with_current($prompt, $key, $lang)
+    {
+        $src = (string) bottext_resolve_key($key, $lang);
+        if (trim($src) === '') {
+            return $prompt;
+        }
+        $visible = function ($html) {
+            return mb_strlen(html_entity_decode(strip_tags($html), ENT_QUOTES | ENT_HTML5, 'UTF-8'));
+        };
+        $head = "\n\n📄 <b>متن فعلی</b> (روش بزن تا کپی بشه، بعد عوضش کن و بفرست):\n";
+        // Telegram counts emoji as two - keep well under 4096
+        $max = 3800;
+        $parts = explode("\n\n", $prompt, 2);
+        $first = $parts[0];
+        $rest = $parts[1] ?? '';
+        if ($visible($first . $head . $rest) + mb_strlen($src) > $max) {
+            // the formatting guide goes first; the variables of this message stay
+            $vars = '';
+            foreach (['🔹 اطلاعات کاربر', '🔹 اطلاعات سرویس'] as $mark) {
+                $at = mb_strpos($rest, $mark);
+                if ($at !== false) {
+                    $vars = mb_substr($rest, $at);
+                    break;
+                }
+            }
+            $rest = "🗑 برای برگشت به کپشن پیش‌فرض، دکمه ریست رو بزن" . ($vars !== '' ? "\n\n" . $vars : '');
+        }
+        $room = $max - $visible($first . $head . $rest) - 40;
+        $cut = '';
+        if (mb_strlen($src) > $room) {
+            $src = mb_substr($src, 0, max(0, $room));
+            $cut = "\n<i>✂️ متن خیلی بلنده؛ فقط اولش اینجا جا شد.</i>";
+        }
+        return $first . $head . '<pre>' . htmlspecialchars($src, ENT_QUOTES, 'UTF-8') . '</pre>' . $cut . ($rest !== '' ? "\n\n" . $rest : '');
+    }
+}
 if (!function_exists('bt_current_text_quote')) {
     // One item's live text, quoted, for the top of its editing screen.
     //
@@ -6600,7 +6657,7 @@ if (!function_exists('help_rename_editor_payload')) {
             $buttonsByKey = [];
             foreach ($orderedKeys as $idx => $key) {
                 $emo = help_layout_emoji_prefix($key, $section);
-                $color = help_layout_effective_color($section, $key, $kind);
+                $color = help_layout_effective_color($section, $key, $kind, $lang);
                 $isRenamed = isset($section['rename'][$key]) && $section['rename'][$key] !== '';
                 // 🚫 = hidden from customers (set in 📐 چیدمان) - shown here too,
                 // or renaming a button nobody can see looks like a broken rename
@@ -6647,7 +6704,7 @@ if (!function_exists('help_layout_editor_payload')) {
             $buttonsByKey = [];
             foreach ($orderedKeys as $idx => $key) {
                 $emo = help_layout_emoji_prefix($key, $section);
-                $color = help_layout_effective_color($section, $key, $kind);
+                $color = help_layout_effective_color($section, $key, $kind, $lang);
                 // hidden items keep their row here (this is the only screen that
                 // can bring them back) and say so
                 $name = (!empty($section['hidden'][(string) $key]) ? '🚫 ' : '') . $emo['prefix'] . ($items[$key] ?? $key);
@@ -6745,13 +6802,39 @@ if (!function_exists('help_layout_effective_color')) {
     // preview screen here shows the same thing the customer sees. Payment-method
     // buttons fall back to blue (gateway_apply_button_style does the same), the
     // other kinds still fall back to Telegram's plain white.
-    function help_layout_effective_color(array $section, $key, $kind)
+    function help_layout_effective_color(array $section, $key, $kind, $lang = null)
     {
         $color = $section['color'][$key] ?? '';
         if (in_array($color, ['primary', 'success', 'danger'], true)) {
             return $color;
         }
-        return $kind === 'gateway' ? 'primary' : '';
+        return help_layout_default_color($kind, $key, $lang);
+    }
+    // the colour a button has while nothing is set for it here: the gateway
+    // buttons ship blue, and 🧩 حجم دلخواه among the plans keeps the colour it
+    // has in 🎨 ← حجم دلخواه (blue unless changed there) - so ⚪ is shown only
+    // for a button that really has no colour of its own
+    function help_layout_default_color($kind, $key, $lang = null)
+    {
+        if ($kind === 'gateway') {
+            return 'primary';
+        }
+        if ($kind === 'product' && (string) $key === 'cvol' && $lang !== null && function_exists('cvol_entry_button')) {
+            $b = cvol_entry_button($lang, 'x');
+            $st = is_array($b) ? (string) ($b['style'] ?? '') : 'primary';
+            return in_array($st, ['primary', 'success', 'danger'], true) ? $st : '';
+        }
+        return '';
+    }
+    // the next colour of the one-tap cycle: «default» (nothing stored) first,
+    // then the colours that look different from it - a tap always changes
+    // what the button looks like, and the last one goes back to the default
+    function color_cycle_next($stored, $default)
+    {
+        $stored = in_array($stored, ['primary', 'success', 'danger'], true) && $stored !== $default ? $stored : '';
+        $seq = array_merge([''], array_values(array_diff(['primary', 'success', 'danger'], [$default])));
+        $pos = array_search($stored, $seq, true);
+        return $seq[(($pos === false ? 0 : $pos) + 1) % count($seq)];
     }
 }
 if (!function_exists('help_color_editor_payload')) {
@@ -6772,7 +6855,7 @@ if (!function_exists('help_color_editor_payload')) {
             $buttonsByKey = [];
             foreach ($orderedKeys as $idx => $key) {
                 $emo = help_layout_emoji_prefix($key, $section);
-                $effective = help_layout_effective_color($section, $key, $kind);
+                $effective = help_layout_effective_color($section, $key, $kind, $lang);
                 $name = (!empty($section['hidden'][(string) $key]) ? '🚫 ' : '') . $emo['prefix'] . ($items[$key] ?? $key) . ' ' . $styleEmoji[$effective];
                 $btn = ['text' => $name, 'callback_data' => "help_col_pick:{$kind}:{$lang}:{$idx}"];
                 if ($emo['icon'] !== '') {
@@ -6811,7 +6894,7 @@ if (!function_exists('help_emoji_editor_payload')) {
             $buttonsByKey = [];
             foreach ($orderedKeys as $idx => $key) {
                 $emo = help_layout_emoji_prefix($key, $section);
-                $color = help_layout_effective_color($section, $key, $kind);
+                $color = help_layout_effective_color($section, $key, $kind, $lang);
                 $name = (!empty($section['hidden'][(string) $key]) ? '🚫 ' : '') . $emo['prefix'] . ($items[$key] ?? $key);
                 $btn = ['text' => $name, 'callback_data' => "help_emo_pick:{$kind}:{$lang}:{$idx}"];
                 if ($emo['icon'] !== '') {
@@ -9530,6 +9613,9 @@ if (preg_match('/^btact\|text\|([a-z]{2})\|(.+)$/', $datain, $btm) && $adminrule
             . "• بیشترین مبلغ: <code>{max}</code>",
         'users.Balance.directPayCaption' => "• مبلغی که مشتری می‌پردازد (قیمت سرویس): <code>{price}</code>\n"
             . "\n💡 این متن بالای لیست روش‌های پرداخت میاد، وقتی مشتری «پرداخت مستقیم» رو بزنه.",
+        'users.Balance.shortMessage' => "• مبلغ کمبود برای این خرید: <code>{need}</code>\n"
+            . "• قیمت این خرید: <code>{price}</code>\n"
+            . "• موجودی فعلی کاربر: <code>{balance}</code>",
         'users.Balance.shortLine' => "• مبلغ کمبود برای این خرید: <code>{need}</code>\n"
             . "• قیمت این خرید: <code>{price}</code>\n"
             . "• موجودی فعلی کاربر: <code>{balance}</code>",
@@ -9616,6 +9702,9 @@ if (preg_match('/^btact\|text\|([a-z]{2})\|(.+)$/', $datain, $btm) && $adminrule
     if (isset($bt_serviceGuides[$btm[2]])) {
         $bt_prompt .= "\n\n🔹 اطلاعات سرویس\n" . $bt_serviceGuides[$btm[2]];
     }
+    // 📄 the text as it is saved now - tags and all - right under the first
+    // line, in a copyable block: tap it, paste it back, change what you want
+    $bt_prompt = bt_edit_prompt_with_current($bt_prompt, $btm[2], $btm[1]);
     Editmessagetext($from_id, $message_id, $bt_prompt, $bt_kb, 'HTML');
     return;
 }
@@ -9849,6 +9938,15 @@ if (preg_match('/^gbs\|(hub|lay|layp|layc|lays|layw|layr|col|colp|emo|emop|emos|
         || ($gs_op === 'lays' && count($gs_idx) !== 2)) {
         $gs_op = 'hub';
     }
+    // 💳 under «موجودی کافی نیست» is drawn as on the confirm page - its look is set there
+    if ($gs_alias === 'sf' && in_array($gs_op, ['colp', 'emop', 'renp'], true) && ($gs_idx[0] ?? -1) === 1) {
+        telegram('answerCallbackQuery', [
+            'callback_query_id' => $callback_query_id,
+            'text' => 'اسم، رنگ و ایموجی «💳 پرداخت مستقیم» از «🔘 دکمه‌های تأیید خرید» (کپشن تأیید خرید عادی) میاد. اینجا فقط جاش رو توی 📐 چیدمان عوض می‌کنی یا مخفیش می‌کنی.',
+            'show_alert' => true,
+        ]);
+        return;
+    }
     // any tap here also ends a prompt the admin walked away from
     step('home', $from_id);
     $gs_h = $textbotlang['Admin']['Help'];
@@ -9856,11 +9954,10 @@ if (preg_match('/^gbs\|(hub|lay|layp|layc|lays|layw|layr|col|colp|emo|emop|emos|
     $gs_picked = null;
     $gs_note = '';
     if ($gs_op === 'colp') {
-        // ⚪ پیش‌فرض -> 🔵 -> 🟢 -> 🔴 -> ⚪
-        $gs_order = ['', 'primary', 'success', 'danger'];
+        // the button's own colour (nothing stored) -> the other colours -> back
         $gs_ov = genbtn_override($gs_lang, $gs_key, $gs_idx[0]);
-        $gs_pos = array_search((string) ($gs_ov['style'] ?? ''), $gs_order, true);
-        genbtn_set_style($gs_lang, $gs_key, $gs_idx[0], $gs_order[(($gs_pos === false ? 0 : $gs_pos) + 1) % count($gs_order)]);
+        $gs_def_style = (string) ($gs_defs[$gs_idx[0]]['style'] ?? '');
+        genbtn_set_style($gs_lang, $gs_key, $gs_idx[0], color_cycle_next((string) ($gs_ov['style'] ?? ''), in_array($gs_def_style, ['primary', 'success', 'danger'], true) ? $gs_def_style : ''));
         $gs_screen = 'col';
     } elseif ($gs_op === 'emos' || $gs_op === 'emod') {
         // group-wide: "on" only when every button already is
@@ -23490,13 +23587,7 @@ if ($datain == "linkappsetting") {
     $help_ordered = help_layout_apply_order(array_keys($help_items), $help_section['order']);
     $help_key = $help_ordered[$help_idx] ?? null;
     if ($help_key !== null) {
-        $help_color_order = ['', 'primary', 'success', 'danger'];
-        $help_cur_color = $help_section['color'][$help_key] ?? '';
-        $help_cur_idx = array_search($help_cur_color, $help_color_order, true);
-        if ($help_cur_idx === false) {
-            $help_cur_idx = 0;
-        }
-        $help_next_color = $help_color_order[($help_cur_idx + 1) % count($help_color_order)];
+        $help_next_color = color_cycle_next((string) ($help_section['color'][$help_key] ?? ''), help_layout_default_color($help_kind, $help_key, $help_lang));
         if ($help_next_color === '') {
             unset($help_section['color'][$help_key]);
         } else {

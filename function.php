@@ -1064,6 +1064,13 @@ function DirectPayment_settle($order_id, $image = 'images.jpg')
         // the purchase waits (shortfall.php)
         // 💳 paid directly: the wallet is left alone, whatever it holds
         $dp_direct = dpay_is_direct_invoice($get_invoice);
+        // ...and only by a payment of its whole price: the same invoice can
+        // also be paid towards by «💰 افزایش موجودی» for what was lacking
+        // (shortfall.php), and such a payment must not buy the service while
+        // the wallet is left alone
+        if ($dp_direct && is_array($get_invoice) && (float) $Payment_report['price'] + sf_tolerance($Balance_id) < (float) $get_invoice['price_product']) {
+            $dp_direct = false;
+        }
         if (is_array($get_invoice) && !$dp_direct && !sf_covers($Balance_id, $Payment_report['price'], $get_invoice['price_product'])) {
             sf_settle_short($order_id, $Payment_report, $Balance_id, (float) $get_invoice['price_product'], "sfg|{$get_invoice['id_invoice']}");
             return;
@@ -12403,6 +12410,10 @@ if (!function_exists('config_delivery_panel_payload')) {
             }
             if ($doButtons) {
                 $be = genbtn_clear_entry($be, $lang, $key, null, $keepShared);
+                if ($key === 'textbot.preInvoice') {
+                    // the normal purchase's confirm row ('cf') is this message's buttons
+                    $be = genbtn_clear_entry($be, $lang, 'users.sell.confirmButtons', null, $keepShared);
+                }
                 if ($key === 'users.usertest.selectUsernamePrompt') {
                     // this item also owns the config-column display settings
                     unset($be[$lang]['configDisplay']);
@@ -14292,6 +14303,14 @@ if (!function_exists('genbtn_alias_map')) {
             // apart from the purchase's 'su' (own-key: its caption owns them)
             'uu' => 'users.usertest.selectUsernamePrompt',
             'cf' => 'users.sell.confirmButtons',
+            // the bulk purchase's own confirm/cancel pair (several services at
+            // once): own-key like 'ns', so the bulk caption's green state and
+            // its 🔁 cover these and the normal purchase's 'cf' stays apart
+            'cb' => 'users.sell.preInvoice2',
+            // 📝 the purchase's «موجودی کافی نیست»: 💰 افزایش موجودی (this
+            // message's own, the shared top-up button's look until changed
+            // here) and 💳 پرداخت مستقیم (its look from 'cf' - only placed here)
+            'sf' => 'users.Balance.shortMessage',
             // unlike 'cf', this key is not shared - it is the SAME key as the
             // caption item itself, so resetting/green-state checking the
             // caption already covers its one button for free
@@ -14440,7 +14459,7 @@ if (!function_exists('genbtn_alias_to_key')) {
         if (preg_match('/^k[btrh]$/', (string) $alias)) {
             return isset(subapp_apps()[(int) $idx]) || (int) $idx === subapp_back_idx();
         }
-        $extras = ['ab' => [0], 'ut' => [0], 'rw' => [0], 'bc' => [0], 'ns' => [0], 'te' => [0], 'tl' => [0], 'sc' => [0, 2], 'hb' => [0], 'hv' => [0], 'td' => [0, 1], 'su' => [1], 'uu' => [1], 'pu' => [1], 'cv' => [1, 2, 3, 4]];
+        $extras = ['ab' => [0], 'ut' => [0], 'rw' => [0], 'bc' => [0], 'ns' => [0], 'te' => [0], 'tl' => [0], 'sc' => [0, 2], 'hb' => [0], 'hv' => [0], 'td' => [0, 1], 'su' => [1], 'uu' => [1], 'pu' => [1], 'cv' => [1, 2, 3, 4], 'sf' => [1]];
         return in_array((int) $idx, $extras[$alias] ?? [], true);
     }
 }
@@ -14476,6 +14495,19 @@ if (!function_exists('genbtn_defs')) {
             return [
                 0 => ['name' => '🔴 دکمه انصراف', 'text' => $textbotlang['keyboard']['cancelUsernameBtn'], 'style' => 'danger', 'callback_data' => 'buytype_payg'],
                 1 => ['name' => '🟢 دکمه استفاده از پیش‌فرض', 'text' => $textbotlang['keyboard']['useDefaultUsernameBtn'], 'style' => 'success', 'callback_data' => 'none'],
+            ];
+        }
+        if ($alias === 'sf') {
+            $bb = balancebtn_defs($textbotlang)[0];
+            return [
+                0 => ['name' => '💰 دکمه افزایش موجودی', 'text' => $bb['text'], 'style' => $bb['style'], 'callback_data' => 'none'],
+                1 => ['name' => '💳 دکمه پرداخت مستقیم', 'text' => $textbotlang['keyboard']['directPayBtn'] ?? '💳 پرداخت مستقیم', 'style' => 'primary', 'callback_data' => 'none'],
+            ];
+        }
+        if ($alias === 'cb') {
+            return [
+                0 => ['name' => '🔴 دکمه انصراف', 'text' => $textbotlang['keyboard']['backToPlansBtn'], 'style' => 'danger', 'callback_data' => 'none'],
+                1 => ['name' => '🟢 دکمه تأیید و پرداخت', 'text' => $textbotlang['keyboard']['payAndGetService'], 'style' => 'success', 'callback_data' => 'none'],
             ];
         }
         if ($alias === 'cf') {
@@ -15467,20 +15499,23 @@ if (!function_exists('sell_confirm_kb')) {
     // the shared confirm/cancel row for every "تأیید خرید" screen - the only
     // thing that differs per call site is which callback actually confirms
     // the purchase, so that is the one thing the caller supplies
-    function sell_confirm_kb($lang, $textbotlang, $confirmCallback, $cancelCallback = 'backuser')
+    function sell_confirm_kb($lang, $textbotlang, $confirmCallback, $cancelCallback = 'backuser', $alias = 'cf')
     {
-        $defs = genbtn_defs('cf', $textbotlang);
+        // 'cb' = the bulk purchase's own pair (genbtn_alias_map())
+        $alias = $alias === 'cb' ? 'cb' : 'cf';
+        $key = genbtn_alias_to_key($alias);
+        $defs = genbtn_defs($alias, $textbotlang);
         $cbs = [0 => $cancelCallback, 1 => $confirmCallback];
         $buttons = [];
         foreach ($defs as $idx => $d) {
             if (!isset($cbs[$idx])) {
                 continue; // 💳 پرداخت مستقیم's button is drawn by dpay_confirm_kb()
             }
-            $ov = genbtn_override($lang, 'users.sell.confirmButtons', $idx);
+            $ov = genbtn_override($lang, $key, $idx);
             $buttons[$idx] = genbtn_render($d, $ov, $cbs[$idx]);
         }
         // order and width from 📐 چیدمان; with none saved, the same one row as before
-        return json_encode(['inline_keyboard' => genbtn_group_rows('cf', $lang, $buttons, $textbotlang)]);
+        return json_encode(['inline_keyboard' => genbtn_group_rows($alias, $lang, $buttons, $textbotlang)]);
     }
 }
 if (!function_exists('sell_noservice_kb')) {
@@ -15634,7 +15669,7 @@ if (!function_exists('genbtn_hub_payload')) {
 
     function genbtn_group_title($alias, $textbotlang)
     {
-        $titles = ['su' => '🔘 دکمه‌های نام‌گذاری سرویس', 'uu' => '🔘 دکمه‌های اکانت تست', 'pu' => '🔘 دکمه‌های نام‌گذاری اکانت ساعتی', 'cf' => '🔘 دکمه‌های تأیید خرید', 'ns' => '🔘 دکمه‌ی نداشتن سرویس فعال', 'te' => '🔘 دکمه‌ی پیام اتمام اکانت تست', 'sc' => '🔘 دکمه‌های لیست سرویس‌ها (سرویس‌های من)', 'bc' => '🔘 دکمه‌ی تهیه اشتراک (شارژ کیف پول)', 'rn' => '🔘 دکمه‌های فاکتور تمدید سرویس', 'cl' => '🔘 دکمه‌های تغییر لینک اتصال', 'td' => '🔘 دکمه‌های کد تخفیف شارژ', 'hb' => '🔘 دکمه‌ی بازگشت به دسته‌بندی آموزش', 'hv' => '🔘 دکمه‌ی بازگشت (زیر محتوای آموزش)', 'ab' => '📚 دکمه‌ی مشاهده آموزش (پیام بعد از خرید)', 'ut' => '📚 دکمه‌ی مشاهده آموزش (اکانت تست)', 'rw' => '📚 دکمه‌ی مشاهده آموزش (کانفیگ هدیه‌ی دعوت)', 'lc' => '📌 دکمه‌ی عضویت مجدد (پیام خروج از کانال)', 'ma' => '↩️ دکمه‌ی پاسخ به پیام ادمین', 'cv' => '🔘 دکمه‌های صفحه‌ی حجم دلخواه'];
+        $titles = ['su' => '🔘 دکمه‌های نام‌گذاری سرویس', 'uu' => '🔘 دکمه‌های اکانت تست', 'pu' => '🔘 دکمه‌های نام‌گذاری اکانت ساعتی', 'cf' => '🔘 دکمه‌های تأیید خرید', 'cb' => '🔘 دکمه‌های تأیید خرید عمده', 'sf' => '🔘 دکمه‌های پیام «موجودی کافی نیست»', 'ns' => '🔘 دکمه‌ی نداشتن سرویس فعال', 'te' => '🔘 دکمه‌ی پیام اتمام اکانت تست', 'sc' => '🔘 دکمه‌های لیست سرویس‌ها (سرویس‌های من)', 'bc' => '🔘 دکمه‌ی تهیه اشتراک (شارژ کیف پول)', 'rn' => '🔘 دکمه‌های فاکتور تمدید سرویس', 'cl' => '🔘 دکمه‌های تغییر لینک اتصال', 'td' => '🔘 دکمه‌های کد تخفیف شارژ', 'hb' => '🔘 دکمه‌ی بازگشت به دسته‌بندی آموزش', 'hv' => '🔘 دکمه‌ی بازگشت (زیر محتوای آموزش)', 'ab' => '📚 دکمه‌ی مشاهده آموزش (پیام بعد از خرید)', 'ut' => '📚 دکمه‌ی مشاهده آموزش (اکانت تست)', 'rw' => '📚 دکمه‌ی مشاهده آموزش (کانفیگ هدیه‌ی دعوت)', 'lc' => '📌 دکمه‌ی عضویت مجدد (پیام خروج از کانال)', 'ma' => '↩️ دکمه‌ی پاسخ به پیام ادمین', 'cv' => '🔘 دکمه‌های صفحه‌ی حجم دلخواه'];
         if (isset($titles[$alias])) {
             return $titles[$alias];
         }
@@ -15651,7 +15686,9 @@ if (!function_exists('genbtn_hub_payload')) {
             'su' => 'این ۲ دکمه، زیر پیام انتخاب نام سرویس (مرحله‌ی خرید) به کاربر نشون داده می‌شن.',
             'uu' => 'این ۲ دکمه، زیر پیام درخواست نام کاربری اکانت تست میان: 🔴 انصراف، 🟢 ساختن با اسم پیش‌فرض. جدا از دکمه‌های نام‌گذاری خرید معمولی‌ان؛ هر زبان تنظیم خودش رو داره.',
             'pu' => 'این ۲ دکمه، زیر سؤال نام کاربری اکانت ساعتی میان (وقتی «💡 روش ساخت نام کاربری» دلخواه باشه): 🔴 برمی‌گرده به صفحه‌ی تعرفه، 🟢 با اسم پیش‌فرض اکانت ساعتی می‌سازه. جدا از دکمه‌های نام‌گذاری خرید معمولی‌ان.',
-            'cf' => 'این دکمه‌ها زیر صفحه‌ی تأیید نهایی خرید نشون داده می‌شن - هر سه حالت (عادی/تخفیف‌دار/حجم دلخواه) از این یکی استفاده می‌کنن، پس ویرایششون روی هر سه اثر می‌ذاره. دکمه‌ی ۳ (💳 پرداخت مستقیم) فقط وقتی میاد که توی «🏬 تنظیمات فروشگاه ← 🛒 وضعیت قابلیت‌های فروشگاه» روشنش کرده باشی؛ اون موقع دکمه‌ی تأیید هم «تایید و پرداخت از کیف پول» می‌شه (اسمش از همین‌جا قابل تغییره) و بازگشت می‌ره زیرشون - مگه اینکه توی 📐 چیدمان جور دیگه‌ای چیده باشی.',
+            'sf' => 'دکمه‌ی «💰 افزایش موجودی» زیر این پیام همین کمبود رو شارژ می‌کنه و بعد از پرداخت خرید خودکار انجام می‌شه. تا اینجا عوضش نکنی، شکل دکمه‌ی مشترک «💰 افزایش موجودی» رو داره. دکمه‌ی «💳 پرداخت مستقیم» فقط وقتی میاد که پرداخت مستقیم برای این خرید روشن باشه؛ اسم، رنگ و ایموجیش از «🔘 دکمه‌های تأیید خرید» میاد و اینجا فقط جاش رو توی 📐 چیدمان عوض می‌کنی یا مخفیش می‌کنی.',
+            'cb' => 'این دکمه‌ها فقط زیر صفحه‌ی تأیید خرید عمده (چند سرویس با هم) نشون داده می‌شن. دکمه‌های خرید عادی جدا تنظیم می‌شن و این‌ها روی اون‌ها اثری ندارن.',
+            'cf' => 'این دکمه‌ها زیر صفحه‌ی تأیید نهایی خرید عادی نشون داده می‌شن - هر سه حالت (عادی/تخفیف‌دار/حجم دلخواه) از این یکی استفاده می‌کنن، پس ویرایششون روی هر سه اثر می‌ذاره. خرید عمده دکمه‌های خودش رو داره. دکمه‌ی ۳ (💳 پرداخت مستقیم) فقط وقتی میاد که توی «🏬 تنظیمات فروشگاه ← 🛒 وضعیت قابلیت‌های فروشگاه» روشنش کرده باشی؛ اون موقع دکمه‌ی تأیید هم «تایید و پرداخت از کیف پول» می‌شه (اسمش از همین‌جا قابل تغییره) و بازگشت می‌ره زیرشون - مگه اینکه توی 📐 چیدمان جور دیگه‌ای چیده باشی.',
             'ns' => 'این ۱ دکمه، زیر پیامِ «سرویس فعالی ندارید» (وقتی 🛍 سرویس‌های من خالیه) به کاربر نشون داده می‌شه.',
             'te' => 'این ۱ دکمه، زیر پیامِ «اکانت تست شما به پایان رسید» به کاربر نشون داده می‌شه (همون پیامی که کرون موقع تموم‌شدن اعتبار اکانت تست می‌فرسته). متن، رنگ، ایموجی و مخفی بودنش مال هر زبان جداست.',
             'sc' => 'این دکمه‌ها زیر لیست سرویس‌های کاربر (🛍 سرویس‌های من) میان و توی همه‌ی صفحه‌ها یکی‌ان: ❌ بستن همیشه؛ و وقتی سرویس‌ها از یه صفحه (۲۰ تا) بیشتر باشن، 🔎 جستجو سریع و دکمه‌های صفحه - توی صفحه‌ی اول «صفحه بعد»، توی صفحه‌های بعد «بعدی / قبلی».',
@@ -15701,7 +15738,7 @@ if (!function_exists('genbtn_hub_payload')) {
             return bt_origin_get($from_id, "bt_edit|{$lang}|{$key}") ?? bt_btnitem_back_cb($key, $lang);
         }
         // 'cf' points at textbot.preInvoice (the normal-purchase تأیید خرید)
-        $backKeyMap = ['su' => 'users.sell.selectUsernamePrompt', 'uu' => 'users.usertest.selectUsernamePrompt', 'pu' => 'users.payg.askUsername', 'cf' => 'textbot.preInvoice', 'ns' => 'users.sell.service_not_available', 'te' => 'textbot.testExpired', 'tl' => 'users.usertest.limitwarning', 'sc' => 'users.sell.service_sell', 'bc' => 'users.Balance.chargeSuccess', 'rn' => 'users.extend.invoiceCreated', 'cl' => 'users.changeLink.warnchange', 'td' => 'users.Balance.topupDiscPrompt', 'hb' => 'users.help.listCaption', 'hv' => 'users.help.categoryCaption', 'ab' => 'textbot.afterPay', 'ut' => 'textbot.afterText', 'rw' => 'users.affiliates.rewardAfterPay', 'lc' => 'users.channel.left_channel', 'ma' => 'users.support.messageFromAdminAlt', 'cv' => 'users.cvol.caption'];
+        $backKeyMap = ['su' => 'users.sell.selectUsernamePrompt', 'uu' => 'users.usertest.selectUsernamePrompt', 'pu' => 'users.payg.askUsername', 'cf' => 'textbot.preInvoice', 'cb' => 'users.sell.preInvoice2', 'sf' => 'users.Balance.shortMessage', 'ns' => 'users.sell.service_not_available', 'te' => 'textbot.testExpired', 'tl' => 'users.usertest.limitwarning', 'sc' => 'users.sell.service_sell', 'bc' => 'users.Balance.chargeSuccess', 'rn' => 'users.extend.invoiceCreated', 'cl' => 'users.changeLink.warnchange', 'td' => 'users.Balance.topupDiscPrompt', 'hb' => 'users.help.listCaption', 'hv' => 'users.help.categoryCaption', 'ab' => 'textbot.afterPay', 'ut' => 'textbot.afterText', 'rw' => 'users.affiliates.rewardAfterPay', 'lc' => 'users.channel.left_channel', 'ma' => 'users.support.messageFromAdminAlt', 'cv' => 'users.cvol.caption'];
         $backKey = ($origin === 'u') ? 'users.usertest.selectUsernamePrompt' : ($backKeyMap[$alias] ?? 'users.sell.selectUsernamePrompt');
         return "bt_edit|{$lang}|{$backKey}";
     }
@@ -15712,7 +15749,7 @@ if (!function_exists('genbtn_hub_payload')) {
     // different screens) have none.
     function genbtn_layout_default($alias)
     {
-        return ['su' => 'half', 'uu' => 'half', 'pu' => 'half', 'cf' => 'half', 'cl' => 'full',
+        return ['su' => 'half', 'uu' => 'half', 'pu' => 'half', 'cf' => 'half', 'cb' => 'half', 'sf' => 'full', 'cl' => 'full',
             'gb' => 'full', 'kb' => 'half'][genbtn_canonical_alias($alias)] ?? null;
     }
     // one button's width with nothing stored: its group's - except the app
@@ -15856,7 +15893,8 @@ if (!function_exists('genbtn_hub_payload')) {
         // $textbotlang here is the panel's Persian - so the English tab used to
         // show Persian default names under English overrides
         foreach (genbtn_defs($alias, lang_tab_texts($lang)) as $idx => $d) {
-            $ov = genbtn_override($lang, $key, $idx);
+            $d = genbtn_def_as_shown($alias, (int) $idx, $d, $lang);
+            $ov = genbtn_override_shown($alias, $lang, (int) $idx);
             $b = genbtn_render($d, $ov, 'none');
             if (genbtn_is_hidden($d, $ov)) {
                 $b['text'] = '🚫 ' . $b['text'];
@@ -15864,6 +15902,72 @@ if (!function_exists('genbtn_hub_payload')) {
             $btns[$idx] = $mk((int) $idx, $b, $d, $ov);
         }
         return genbtn_group_rows($alias, $lang, $btns, $textbotlang);
+    }
+    // A button's default as the customer actually reads it right now: with
+    // 💳 پرداخت مستقیم on, the normal purchase's confirm button says «تایید و
+    // پرداخت از کیف پول» (dpay_confirm_kb()) - the editor showed the plain name
+    function genbtn_def_as_shown($alias, $idx, array $d, $lang)
+    {
+        if ($alias === 'cf' && $idx === 1 && function_exists('dpay_path_on')
+            && (dpay_path_on($lang, 'buy') || dpay_path_on($lang, 'cvol'))) {
+            $d['text'] = lang_tab_texts($lang)['keyboard']['payFromWalletBtn'] ?? $d['text'];
+        }
+        return $d;
+    }
+    // A button's settings as they reach the customer. Plain sets: their own.
+    // 'sf' borrows: its 💰 starts from the shared top-up button's look (each
+    // field set here wins), its 💳 is drawn exactly as on the confirm page
+    // ('cf' button 3) - only whether it is shown here is its own.
+    function genbtn_override_shown($alias, $lang, $idx)
+    {
+        $key = (string) genbtn_alias_to_key($alias);
+        $own = genbtn_override($lang, $key, $idx);
+        if ($alias !== 'sf') {
+            return $own;
+        }
+        if ((int) $idx === 0) {
+            $shared = function_exists('balancebtn_override') ? balancebtn_override($lang) : [];
+            if (isset($shared['icon_emoji']) && !isset($shared['emojiIcon'])) {
+                $shared['emojiIcon'] = $shared['icon_emoji'];
+            }
+            unset($shared['icon_emoji']);
+            return array_merge($shared, $own);
+        }
+        $look = genbtn_override($lang, 'users.sell.confirmButtons', 2);
+        unset($look['hidden']);
+        if (array_key_exists('hidden', $own)) {
+            $look['hidden'] = $own['hidden'];
+        }
+        return $look;
+    }
+    // every button of a set, named as on the editor and as the customer gets
+    // it now (rename, emoji, premium emoji, hidden) - on the set's own screen
+    function genbtn_names_preview_html($alias, $lang, $textbotlang)
+    {
+        $key = (string) genbtn_alias_to_key($alias);
+        $lines = [];
+        foreach (genbtn_defs($alias, lang_tab_texts($lang)) as $idx => $d) {
+            $d = genbtn_def_as_shown($alias, (int) $idx, $d, $lang);
+            $ov = genbtn_override_shown($alias, $lang, (int) $idx);
+            $btn = genbtn_render($d, $ov, 'none');
+            $txt = htmlspecialchars((string) $btn['text'], ENT_QUOTES, 'UTF-8');
+            if (!empty($btn['icon_custom_emoji_id'])) {
+                $txt = '<tg-emoji emoji-id="' . htmlspecialchars((string) $btn['icon_custom_emoji_id'], ENT_QUOTES) . '">⭐</tg-emoji> ' . $txt;
+            }
+            $mark = (isset($ov['text']) && $ov['text'] !== '') ? ' ✏️' : '';
+            if (genbtn_is_hidden($d, $ov)) {
+                $mark .= ' (🚫 مخفی)';
+            }
+            if ((($alias === 'cf' && (int) $idx === 2) || ($alias === 'sf' && (int) $idx === 1)) && function_exists('dpay_path_on')
+                && !dpay_path_on($lang, 'buy') && !dpay_path_on($lang, 'cvol')) {
+                $mark .= ' (فقط وقتی پرداخت مستقیم روشنه)';
+            }
+            if ($alias === 'sf' && (int) $idx === 1) {
+                $mark .= ' (شکلش از 🔘 دکمه‌های تأیید خرید)';
+            }
+            $lines[] = htmlspecialchars((string) $d['name'], ENT_QUOTES, 'UTF-8') . ': ' . $txt . $mark;
+        }
+        return '<blockquote>' . implode("\n", $lines) . '</blockquote>';
     }
     function genbtn_tool_back_row($alias, $lang, $textbotlang, $sfx)
     {
@@ -15940,6 +16044,8 @@ if (!function_exists('genbtn_hub_payload')) {
         }
         if (in_array($alias, genbtn_preview_aliases(), true)) {
             $info .= "\n👁 <b>نام فعلی دکمه:</b>\n" . genbtn_label_preview_html($alias, $lang) . "\n";
+        } elseif (in_array($alias, ['cf', 'cb', 'sf'], true)) {
+            $info .= "\n👁 <b>دکمه‌ها همون‌طور که مشتری می‌بینه:</b>\n" . genbtn_names_preview_html($alias, $lang, $textbotlang) . "\n";
         }
         if ($csKey !== '') {
             $info .= close_sticker_caption_block($csKey, $note, $lang);
@@ -16027,7 +16133,9 @@ if (!function_exists('genbtn_hub_payload')) {
         $sfx = ($origin === 'u') ? '|u' : '';
         $marks = ['' => '⚪', 'primary' => '🔵', 'success' => '🟢', 'danger' => '🔴'];
         $rows = genbtn_tool_rows($alias, $lang, $textbotlang, function ($idx, $b, $d, $ov) use ($alias, $lang, $sfx, $marks) {
-            $cur = (isset($ov['style']) && isset($marks[$ov['style']])) ? $ov['style'] : '';
+            // what the customer sees: its own colour while nothing is set
+            $cur = (string) genbtn_current($d, $ov)[1];
+            $cur = isset($marks[$cur]) ? $cur : '';
             $b['text'] .= ' ' . $marks[$cur];
             $b['callback_data'] = "gbs|colp|{$lang}|{$alias}|{$idx}{$sfx}";
             return $b;
@@ -22410,6 +22518,8 @@ if (!function_exists('bt_nosticker_keys')) {
             ...array_map(fn($k) => 'users.cvol.' . $k, cvol_fragment_keys()),
             // blocks pasted into the referral screen, never a message of their own
             'users.affiliates.membershipGiftInfo',
+            // 📝 «موجودی کافی نیست» of a purchase: drawn over the confirm screen, in place
+            'users.Balance.shortMessage',
             // 🎁's: a button, a status line, a list label, a popup
             'users.affiliates.rewardNameBtn',
             'users.affiliates.rewardStatusNaming',

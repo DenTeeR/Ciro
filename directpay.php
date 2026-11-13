@@ -68,6 +68,15 @@ if (!function_exists('dpay_cfg')) {
         $pdo->prepare("UPDATE invoice SET pay_direct = '1' WHERE id_invoice = ?")->execute([(string) $idInvoice]);
         clearSelectCache('invoice');
     }
+    // the invoice goes back to an ordinary one: the customer left the direct
+    // payment for «💰 افزایش موجودی» on the «موجودی کافی نیست» message
+    function dpay_unmark_invoice($idInvoice)
+    {
+        global $pdo;
+        dpay_ensure_schema();
+        $pdo->prepare("UPDATE invoice SET pay_direct = '0' WHERE id_invoice = ? AND pay_direct = '1'")->execute([(string) $idInvoice]);
+        clearSelectCache('invoice');
+    }
     function dpay_is_direct_invoice($inv)
     {
         return is_array($inv) && (string) ($inv['pay_direct'] ?? '0') === '1';
@@ -141,7 +150,7 @@ if (!function_exists('dpay_cfg')) {
     // A purchase confirmed with 💳 پرداخت مستقیم: the unpaid invoice it made is what
     // the payment will complete, for its whole price. true when it went on to the
     // payment methods.
-    function dpay_start_buy($userRow, $invoiceId, $price, $messageId, $username)
+    function dpay_start_buy($userRow, $invoiceId, $price, $messageId, $username, $backCallback = null)
     {
         global $from_id, $step_payment_none, $noCreditText;
         if (!empty($step_payment_none)) {
@@ -155,7 +164,8 @@ if (!function_exists('dpay_cfg')) {
         update("user", "Processing_value_one", (string) $username, "id", $from_id);
         update("user", "Processing_value_tow", "getconfigafterpay", "id", $from_id);
         step('get_step_payment', $from_id);
-        [$text, $kb] = dpay_methods_view($userRow, $price, "dpb|{$invoiceId}");
+        // 🔙 to where it began: the plan list, or the «موجودی کافی نیست» message
+        [$text, $kb] = dpay_methods_view($userRow, $price, $backCallback ?? "dpb|{$invoiceId}");
         Editmessagetext($from_id, $messageId, $text, $kb, 'HTML');
         return true;
     }

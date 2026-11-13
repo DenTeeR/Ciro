@@ -1448,4 +1448,33 @@ return [
             . "2️⃣ Tap «🔐 کد تایید تلگرامی هنگام ورود» until it shows ✅\n"
             . "🌐 Web panel: «Settings → Security».</blockquote>",
     ],
+    [
+        'n' => 93,
+        'date' => '2026-11-11',
+        'fa' => "<blockquote>📝 <b>پیام «موجودی کافی نیست» موقع خرید، یکجا و کامل قابل تغییر</b>\n"
+            . "وقتی مشتری «تایید و پرداخت» رو می‌زنه و موجودیش کمه، پیامی می‌گیره که می‌گه چقدر کم داره. این پیام حالا یک کپشن یکپارچه‌ست (قبلاً دو تیکه بود) و دکمه‌هاش هم قابل تنظیمن: اسم، ایموجی، ایموجی پریمیوم، رنگ و 📐 چیدمان دکمه‌ی «💰 افزایش موجودی».\n"
+            . "اگه پرداخت مستقیم برای خرید روشن باشه، دکمه‌ی «💳 پرداخت مستقیم» هم زیرش میاد. شکل این دکمه از «🔘 دکمه‌های تأیید خرید» میاد؛ اینجا فقط جاش رو عوض می‌کنی یا مخفیش می‌کنی.\n"
+            . "توی متن می‌تونی <code>{need}</code> (کمبود)، <code>{price}</code> (قیمت) و <code>{balance}</code> (موجودی) بذاری. اگه قبلاً یکی از اون دو تیکه رو عوض کرده بودی، متنت سر جاشه.\n"
+            . "📍 🎨 شخصی‌سازی ← 🛒 پیام‌ها و ظاهر مراحل خرید ← 🧾 تأیید خرید ← 📝 پیام «موجودی کافی نیست»\n"
+            . "🌐 پنل وب: «متن‌ها» (همین بخش) و «دکمه‌ها» ← کارت 📝 پیام «موجودی کافی نیست».</blockquote>\n\n"
+            . "<blockquote>🧾 <b>خرید عادی و خرید عمده دیگه روی هم اثر نمی‌ذارن</b>\n"
+            . "دکمه‌های تأیید خرید عمده حالا مال خودشه. عوض کردن یا ریست کردن یکی، اون یکی رو سبز یا ریست نمی‌کنه. تنظیماتی که قبلاً داشتی برای هر دو سر جاشه.\n"
+            . "📍 🎨 ← 🛒 پیام‌ها و ظاهر مراحل خرید ← «✏️ کپشن تأیید خرید (خرید عمده)» ← «🔘 ویرایش دکمه‌های تأیید خرید».</blockquote>\n\n"
+            . "<blockquote>✏️ <b>متن فعلی موقع ویرایش کپشن</b>\n"
+            . "با زدن «✏️ ویرایش کپشن»، متنی که الان ذخیره شده با همه‌ی تگ‌های HTMLش نشون داده می‌شه. روش بزن تا کپی بشه، تغییرش بده و بفرست؛ لازم نیست از اول بنویسی.</blockquote>\n\n"
+            . "<blockquote>🎨 <b>رنگ‌بندی درست</b>\n"
+            . "توی صفحه‌های 🎨 رنگ‌بندی، دکمه‌ای که رنگش رو دست نزدی با رنگ پیش‌فرض واقعیش نشون داده می‌شه (مثلاً «🧩 حجم دلخواه» آبی). هر بار زدن رنگ رو واقعاً عوض می‌کنه. صفحه‌ی «🔘 دکمه‌های تأیید خرید» هم اسم فعلی هر دکمه رو همون‌طور که مشتری می‌بینه نشون می‌ده.</blockquote>",
+        'en' => "<blockquote>📝 <b>The purchase's «not enough balance» message, editable as one</b>\n"
+            . "When a customer confirms a purchase without enough balance, the message telling them what is lacking is now one caption (it was two pieces), and its buttons can be customized: name, emoji, premium emoji, colour and 📐 layout of «💰 افزایش موجودی».\n"
+            . "With direct payment on for the purchase, a «💳 پرداخت مستقیم» button comes under it too; it looks like the purchase confirm buttons and is only placed or hidden here.\n"
+            . "The text can use <code>{need}</code> (lacking), <code>{price}</code> (price) and <code>{balance}</code> (balance). If you had reworded either old piece, your words are kept.\n"
+            . "📍 🎨 → 🛒 پیام‌ها و ظاهر مراحل خرید → 🧾 تأیید خرید → 📝 پیام «موجودی کافی نیست»\n"
+            . "🌐 Web panel: «Texts» (same section) and «Buttons» → its card.</blockquote>\n\n"
+            . "<blockquote>🧾 <b>Normal and bulk purchase no longer affect each other</b>\n"
+            . "The bulk purchase has its own confirm buttons now; changing or resetting one leaves the other alone. What you had set is kept for both.</blockquote>\n\n"
+            . "<blockquote>✏️ <b>The current text when editing a caption</b>\n"
+            . "«✏️ ویرایش کپشن» now shows the saved text with its HTML tags; tap it to copy, change it and send it back.</blockquote>\n\n"
+            . "<blockquote>🎨 <b>Colours shown right</b>\n"
+            . "Colour screens show a button you have not changed in its real default colour (for example «🧩 حجم دلخواه» blue), and every tap changes it. «🔘 دکمه‌های تأیید خرید» also lists each button's current name as the customer sees it.</blockquote>",
+    ],
 ];

@@ -1773,6 +1773,64 @@ try {
 } catch (\Throwable $e) {
     error_log('extras schema: ' . $e->getMessage());
 }
+// 🧾 the bulk purchase has its own confirm/cancel pair now (genbtn alias 'cb',
+// stored under users.sell.preInvoice2); it used to show the normal purchase's
+// ('cf'). Once: a tab whose 'cf' was customized keeps its bulk screen looking
+// the same, by copying those two buttons (and their layout) over.
+try {
+    addFieldToTable("setting", "bulkcf_split", "0", "VARCHAR(5)");
+    if ((string) $pdo->query("SELECT bulkcf_split FROM setting LIMIT 1")->fetchColumn() !== '1') {
+        $bc_be = json_decode((string) $pdo->query("SELECT button_edit FROM setting LIMIT 1")->fetchColumn(), true);
+        $bc_changed = false;
+        foreach (is_array($bc_be) ? $bc_be : [] as $bc_lang => $bc_tab) {
+            $bc_src = is_array($bc_tab) ? ($bc_tab['users.sell.confirmButtons'] ?? null) : null;
+            if (!is_array($bc_src) || !empty($bc_tab['users.sell.preInvoice2'])) {
+                continue;
+            }
+            $bc_dst = array_intersect_key($bc_src, [0 => 1, 1 => 1, 'layout' => 1]);
+            if (!empty($bc_dst)) {
+                $bc_be[$bc_lang]['users.sell.preInvoice2'] = $bc_dst;
+                $bc_changed = true;
+            }
+        }
+        if ($bc_changed) {
+            update("setting", "button_edit", json_encode($bc_be, JSON_UNESCAPED_UNICODE), null, null);
+        }
+        $pdo->exec("UPDATE setting SET bulkcf_split = '1'");
+    }
+} catch (\Throwable $e) {
+    error_log('bulk confirm split: ' . $e->getMessage());
+}
+// 📝 the purchase's «موجودی کافی نیست» is one caption now (users.Balance.shortMessage);
+// it was two (insufficientBalanceSimple + shortLine). Once: a tab that had
+// reworded either keeps its words, the two joined the way they were shown.
+try {
+    addFieldToTable("setting", "shortmsg_merged", "0", "VARCHAR(5)");
+    if ((string) $pdo->query("SELECT shortmsg_merged FROM setting LIMIT 1")->fetchColumn() !== '1') {
+        $sm_te = json_decode((string) $pdo->query("SELECT text_edit FROM setting LIMIT 1")->fetchColumn(), true);
+        $sm_changed = false;
+        foreach (is_array($sm_te) ? $sm_te : [] as $sm_lang => $sm_tab) {
+            if (!is_array($sm_tab) || bottext_dotted_isset($sm_tab, 'users.Balance.shortMessage')) {
+                continue;
+            }
+            $sm_a = $sm_tab['users']['Balance']['insufficientBalanceSimple'] ?? null;
+            $sm_b = $sm_tab['users']['Balance']['shortLine'] ?? null;
+            if (!is_string($sm_a) && !is_string($sm_b)) {
+                continue;
+            }
+            $sm_a = is_string($sm_a) ? $sm_a : bottext_default_text('users.Balance.insufficientBalanceSimple', $sm_lang);
+            $sm_b = is_string($sm_b) ? $sm_b : bottext_default_text('users.Balance.shortLine', $sm_lang);
+            bottext_dotted_set($sm_te[$sm_lang], 'users.Balance.shortMessage', trim($sm_a . "\n\n" . $sm_b));
+            $sm_changed = true;
+        }
+        if ($sm_changed) {
+            update("setting", "text_edit", json_encode($sm_te, JSON_UNESCAPED_UNICODE), null, null);
+        }
+        $pdo->exec("UPDATE setting SET shortmsg_merged = '1'");
+    }
+} catch (\Throwable $e) {
+    error_log('short message merge: ' . $e->getMessage());
+}
 // with its secret, and asking for chat_member too
 webhook_register();
 // 🆕 tell the admins what this update added (whatsnew.php), once

@@ -1220,7 +1220,8 @@ if ($table_exists) {
 // one buy-callback that deliberately skips the نام دلخواه note step, so going
 // back never re-asks a question the user already answered.
 $payment = sell_confirm_kb($user['lang'] ?? 'fa', $customer_texts, "confirmandgetservice", "buybacktow");
-$paymentom = sell_confirm_kb($user['lang'] ?? 'fa', $customer_texts, "confirmandgetservice");
+// خرید عمده: its own pair (🎨 ← ✏️ کپشن تأیید خرید (خرید عمده) ← 🔘)
+$paymentom = sell_confirm_kb($user['lang'] ?? 'fa', $customer_texts, "confirmandgetservice", 'backuser', 'cb');
 $change_product = json_encode([
     'keyboard' => [
         [['text' => $textbotlang['keyboard']['price']], ['text' => $textbotlang['keyboard']['volume']], ['text' => $textbotlang['keyboard']['time']]],
@@ -2420,11 +2421,8 @@ function keyboard_list_text($lang, $groupFilter = null)
         'users.usertest.selectUsernamePrompt' => function ($lang, $be, $setting) {
             return !empty($be[$lang]['configDisplay']);
         },
-        // the confirm/cancel row is shared by both "تأیید خرید" screens -
-        // whichever one is customized, the other should show it too
-        'users.sell.preInvoice2' => function ($lang, $be, $setting) {
-            return !empty($be[$lang]['users.sell.confirmButtons']);
-        },
+        // the normal purchase's confirm/cancel row ('cf'); the bulk caption's
+        // own pair ('cb') sits under its own key, which the test above covers
         'textbot.preInvoice' => function ($lang, $be, $setting) {
             return !empty($be[$lang]['users.sell.confirmButtons']);
         },
