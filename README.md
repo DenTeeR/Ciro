@@ -1,6 +1,6 @@
 <div align="center">
 
-# Ciro
+<img src=".github/readme/banner.jpg" alt="Ciro — Telegram VPN bot. Sell. Manage. Connect." width="100%"/>
 
 **A Telegram bot that sells and manages VPN subscriptions, with a separate shop for Persian and English customers.**
 
@@ -39,9 +39,18 @@ Already running a bot of the original project, or an older version of this one? 
 
 ## Features
 
+<p align="center">
+  <img src=".github/readme/bilingual.jpg" alt="The bot in English and in Persian, each with its own texts, prices and currency" width="100%"/>
+</p>
+
 - Separate settings, texts, prices and currency for each language (fa / en)
 - Every message and button can be reworded from the bot's 🎨 menu or the web panel, with premium emoji and stickers
 - Web admin panel
+
+<p align="center">
+  <img src=".github/readme/integrations.jpg" alt="Supported VPN panels and payment methods" width="100%"/>
+</p>
+
 - **Panels:** Marzban, Marzneshin, X-UI, Hiddify, S-UI, WGDashboard, Mikrotik, IBSng, Alireza, Rebecca, Remnawave
 - **Payments:** card-to-card, Zarinpal, AqayePardakht, IranPay, Plisio, NOWPayments, TRX, TON, USDT (BEP20), Telegram Stars
 
