@@ -1,6 +1,6 @@
 <div align="center" dir="rtl">
 
-# Ciro
+<img src=".github/readme/banner.jpg" alt="ربات تلگرامی فروش VPN با نام Ciro" width="100%"/>
 
 **ربات تلگرامی برای فروش و مدیریت اشتراک VPN، با فروشگاه جداگانه برای مشتریان فارسی‌زبان و انگلیسی‌زبان.**
 
@@ -45,9 +45,18 @@ bash <(curl -Ls https://raw.githubusercontent.com/DenTeeR/Ciro/master/install.sh
 
 ## امکانات
 
+<p align="center">
+  <img src=".github/readme/bilingual.jpg" alt="ربات به زبان انگلیسی و فارسی، هر کدام با متن‌ها، قیمت‌ها و واحد پول جداگانه" width="100%"/>
+</p>
+
 - تنظیمات، متن‌ها، قیمت‌ها و واحد پول جداگانه برای هر زبان (فارسی / انگلیسی)
 - همهٔ پیام‌ها و دکمه‌ها از منوی 🎨 ربات یا از پنل وب قابل ویرایش‌اند، با پشتیبانی از ایموجی پریمیوم و استیکر
 - پنل مدیریت تحت وب
+
+<p align="center">
+  <img src=".github/readme/integrations.jpg" alt="پنل‌های VPN و روش‌های پرداخت پشتیبانی‌شده" width="100%"/>
+</p>
+
 - **پنل‌های پشتیبانی‌شده:** Marzban، Marzneshin، X-UI، Hiddify، S-UI، WGDashboard، Mikrotik، IBSng، Alireza، Rebecca، Remnawave
 - **روش‌های پرداخت:** کارت‌به‌کارت، زرین‌پال، آقای پرداخت، IranPay، Plisio، NOWPayments، TRX، TON، USDT (BEP20)، ستارهٔ تلگرام
 
